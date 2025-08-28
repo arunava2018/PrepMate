@@ -26,7 +26,7 @@ export default function Navbar() {
   });
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-neutral-900/80 backdrop-blur shadow-sm transition-colors">
+    <nav className="relative top-0 left-0 w-full z-50 bg-white/80 dark:bg-neutral-900/80 backdrop-blur shadow-sm transition-colors">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
         <Link
@@ -38,18 +38,7 @@ export default function Navbar() {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-6">
-          <a
-            href="#features"
-            className="hover:text-yellow-600 dark:hover:text-yellow-400 font-medium"
-          >
-            Features
-          </a>
-          <a
-            href="#faq"
-            className="hover:text-yellow-600 dark:hover:text-yellow-400 font-medium"
-          >
-            FAQ
-          </a>
+      
 
           {!user.loggedIn ? (
             <>

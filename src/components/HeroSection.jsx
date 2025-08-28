@@ -10,7 +10,7 @@ export default function HeroSection() {
   return (
     <section className="min-h-screen flex flex-col justify-center items-center text-center px-6 bg-gradient-to-b from-yellow-50 to-white dark:from-neutral-950 dark:to-neutral-900">
       {/* Heading */}
-      <h1 className="text-4xl sm:text-6xl font-extrabold text-neutral-900 dark:text-white mb-6">
+      <h1 className="w-full text-4xl sm:text-6xl font-extrabold text-neutral-900 dark:text-white mb-6">
         {!typingDone ? (
           <TypeAnimation
             sequence={[

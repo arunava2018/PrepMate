@@ -1,31 +1,30 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import AppLayout from "./layout/AppLayout";
 import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
-import Dashboard from "./pages/Dashboard";
-import AddQuestion from "./pages/AddQuestion";
 import Subject from "./pages/Subject";
 import { ThemeProvider } from "./theme/Themeprovides";
+import Dashboard from "./pages/Dashboard";
+import Addquestion from "./pages/Addquestion";
+
+const router = createBrowserRouter([
+  {
+    element: <AppLayout />, // ✅ Wraps Header + Footer
+    children: [
+      { path: "/", element: <Landing /> },
+      { path: "/auth/:mode", element: <Auth /> },
+      { path: "/dashboard", element: <Dashboard /> },
+      { path: "/add-question", element: <Addquestion /> },
+      { path: "/subject/:id", element: <Subject /> },
+    ],
+  },
+]);
 
 function App() {
   return (
     <ThemeProvider>
-      <Router>
-        <div className="flex flex-col min-h-screen">
-          <Navbar />
-          <main className="flex-1">
-            <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/auth/:mode" element={<Auth />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/add-question" element={<AddQuestion />} />
-              <Route path="/subject/:id" element={<Subject />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 }
