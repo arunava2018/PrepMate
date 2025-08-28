@@ -18,7 +18,7 @@ export default function HeroSection() {
               1500,
               "Revise Smarter, Not Harder 💡",
               1500,
-              "Build Your Own Question Bank 📚",
+              "Your one stop interview preparation solution📚",
               () => setTypingDone(true), // when typing is finished
             ]}
             wrapper="span"
@@ -27,7 +27,7 @@ export default function HeroSection() {
             repeat={0}
           />
         ) : (
-          <span>Build Your Own Question Bank 📚</span>
+          <span>Your one stop interview preparation solution📚</span>
         )}
       </h1>
 
@@ -50,9 +50,9 @@ export default function HeroSection() {
         transition={{ duration: 0.8, delay: 1 }}
         className="flex gap-4"
       >
-        <Link to="/auth/signup">
+        <Link to="/dashboard">
           <Button className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-full text-lg">
-            Get Started
+            Explore
           </Button>
         </Link>
         <Link to="#features">

@@ -4,15 +4,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BeatLoader } from "react-spinners";
 import { Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { login } from "../db/apiAuth";
+import { UrlState } from "../context";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 // ✅ Login validation schema
 const loginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
-  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
 });
 
 export default function Login() {
+  const navigate = useNavigate();
+  const { fetchUser } = UrlState(); // ✅ get fetchUser from context
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -20,6 +28,7 @@ export default function Login() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [successAlert, setSuccessAlert] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -34,13 +43,26 @@ export default function Login() {
       setLoading(true);
       await loginSchema.validate(formData, { abortEarly: false });
 
-      // 🚀 Send API request later
-      console.log("Login Data:", formData);
+      // 🚀 Call login API
+      await login(formData);
+
+      // ✅ Refresh user in context (updates Navbar automatically)
+      await fetchUser();
+
+      // ✅ Show login success alert
+      setSuccessAlert(true);
+
+      // Redirect after 2s
+      setTimeout(() => navigate("/dashboard"), 2000);
 
     } catch (err) {
-      const newErrors = {};
-      err?.inner?.forEach((e) => (newErrors[e.path] = e.message));
-      setErrors(newErrors);
+      if (err.inner) {
+        const newErrors = {};
+        err.inner.forEach((e) => (newErrors[e.path] = e.message));
+        setErrors(newErrors);
+      } else {
+        setErrors({ general: err.message });
+      }
     } finally {
       setLoading(false);
     }
@@ -48,6 +70,13 @@ export default function Login() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {successAlert && (
+        <Alert variant="success" className="mb-4">
+          <AlertTitle>Login Successful!</AlertTitle>
+          <AlertDescription>Redirecting to dashboard...</AlertDescription>
+        </Alert>
+      )}
+
       {/* Email */}
       <div className="space-y-1">
         <Label htmlFor="email">Email</Label>
@@ -82,8 +111,13 @@ export default function Login() {
         >
           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
         </button>
-        {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+        {errors.password && (
+          <p className="text-red-500 text-sm">{errors.password}</p>
+        )}
       </div>
+
+      {/* General error */}
+      {errors.general && <p className="text-red-500 text-sm">{errors.general}</p>}
 
       {/* Submit */}
       <Button
@@ -93,6 +127,16 @@ export default function Login() {
       >
         {loading ? <BeatLoader size={10} color="#fff" /> : "Login"}
       </Button>
+
+      <p className="mx-auto">
+        Don't have an account?{" "}
+        <span
+          onClick={() => navigate("/auth/signup")}
+          className="text-yellow-400 underline cursor-pointer"
+        >
+          Register
+        </span>
+      </p>
     </form>
   );
 }

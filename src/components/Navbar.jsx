@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sun, Moon, Menu, X } from "lucide-react";
 import { useTheme } from "../theme/ThemeProvides";
@@ -13,18 +13,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UrlState } from "../context";
+import { signout } from "@/db/apiAuth";
+import useFetch from "@/hooks/useFetch";
 
 export default function Navbar() {
+  const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const isDark = theme === "dark";
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const [user, setUser] = useState({
-    loggedIn: true,
-    name: "Arunava Banerjee",
-    avatar: "https://github.com/arunava2018.png", // fallback if no image
-  });
-
+  // ✅ Get user from context
+  const { user, fetchUser } = UrlState();
+  const isAuthenticated = !!user?.id;
+  // console.log(isAuthenticated);
+  const { loading, fn: fnLogOut } = useFetch(signout);
+  
   return (
     <nav className="relative top-0 left-0 w-full z-50 bg-white/80 dark:bg-neutral-900/80 backdrop-blur shadow-sm transition-colors">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -38,11 +41,12 @@ export default function Navbar() {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-6">
-      
-
-          {!user.loggedIn ? (
+          {!isAuthenticated ? (
             <>
-              <Link to="/auth/login" className="hover:text-yellow-600 dark:hover:text-yellow-400">
+              <Link
+                to="/auth/login"
+                className="hover:text-yellow-600 dark:hover:text-yellow-400"
+              >
                 Login
               </Link>
               <Link to="/auth/signup">
@@ -56,27 +60,33 @@ export default function Navbar() {
               <DropdownMenuTrigger asChild>
                 <button className="focus:outline-none">
                   <Avatar>
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback>{user.name[0]}</AvatarFallback>
+                    {user?.profile_photo ? (
+                      <AvatarImage src={user.profile_photo} alt={user.name} />
+                    ) : (
+                      <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
+                    )}
                   </Avatar>
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>
-                  <p className="font-bold">Hi. {user.name}</p>
+                  <p className="font-bold">Hi. {user?.name}</p>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild className='cursor-pointer'>
+                <DropdownMenuItem asChild className="cursor-pointer">
                   <Link to="/dashboard">Dashboard</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild className='cursor-pointer'>
+                <DropdownMenuItem asChild className="cursor-pointer">
                   <Link to="/profile">Profile</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => {
                     // signout logic here
-                    setUser({ loggedIn: false });
+                    fnLogOut().then(()=>{
+                      fetchUser();
+                      navigate("/");
+                    })
                   }}
                   className="text-red-500 focus:text-red-500 cursor-pointer"
                 >
@@ -131,7 +141,7 @@ export default function Navbar() {
               FAQ
             </a>
 
-            {!user.loggedIn ? (
+            {!isAuthenticated ? (
               <>
                 <Link
                   to="/auth/login"
@@ -149,7 +159,7 @@ export default function Navbar() {
             ) : (
               <div className="space-y-2">
                 <p className="font-medium text-neutral-700 dark:text-neutral-300">
-                  {user.name}
+                  {user?.name}
                 </p>
                 <Link
                   to="/dashboard"
@@ -167,7 +177,7 @@ export default function Navbar() {
                 </Link>
                 <button
                   onClick={() => {
-                    setUser({ loggedIn: false });
+                    // signout logic here
                     setMenuOpen(false);
                   }}
                   className="block text-red-500 hover:text-red-600"

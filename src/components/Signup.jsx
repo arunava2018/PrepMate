@@ -11,7 +11,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BeatLoader } from "react-spinners";
 import { Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { signup } from "../db/apiAuth";
+import { UrlState } from "../context";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 // ✅ Validation Schema
 const signupSchema = Yup.object().shape({
@@ -24,29 +28,27 @@ const signupSchema = Yup.object().shape({
     .max(new Date().getFullYear() + 10, "Year too far")
     .required("Passout year is required"),
   password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
-  profilePhoto: Yup.mixed().nullable(),
 });
 
 function Signup() {
+  const navigate = useNavigate();
+  const { fetchUser } = UrlState(); // ✅ Get fetchUser from context
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     college: "",
     passoutYear: "",
     password: "",
-    profilePhoto: null,
   });
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [successAlert, setSuccessAlert] = useState(false);
 
   const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: files ? files[0] : value,
-    }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
@@ -57,13 +59,28 @@ function Signup() {
       setLoading(true);
       await signupSchema.validate(formData, { abortEarly: false });
 
-      // 🚀 API call later
-      console.log("Form Data:", formData);
+      // 1️⃣ Call signup API
+      await signup(formData);
+
+      // 2️⃣ Refresh user in context
+      await fetchUser();
+
+      // 3️⃣ Show success alert
+      setSuccessAlert(true);
+
+      // 4️⃣ Automatically navigate to dashboard after 2s
+      setTimeout(() => navigate("/dashboard"), 2000);
 
     } catch (err) {
-      const newErrors = {};
-      err?.inner?.forEach((e) => (newErrors[e.path] = e.message));
-      setErrors(newErrors);
+      if (err?.inner) {
+        // Yup validation errors
+        const newErrors = {};
+        err.inner.forEach((e) => (newErrors[e.path] = e.message));
+        setErrors(newErrors);
+      } else {
+        // API errors
+        setErrors({ general: err.message });
+      }
     } finally {
       setLoading(false);
     }
@@ -76,9 +93,17 @@ function Signup() {
         <CardDescription>Create a new account</CardDescription>
       </CardHeader>
 
+      {successAlert && (
+        <Alert variant="success" className="mb-4">
+          <AlertTitle>Signup Successful!</AlertTitle>
+          <AlertDescription>
+            Your account has been created. Redirecting to dashboard...
+          </AlertDescription>
+        </Alert>
+      )}
+
       <form onSubmit={handleSubmit}>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
           {/* Full Name */}
           <div className="space-y-1">
             <Input
@@ -124,9 +149,7 @@ function Signup() {
               value={formData.passoutYear}
               onChange={handleInputChange}
             />
-            {errors.passoutYear && (
-              <p className="text-red-500 text-sm">{errors.passoutYear}</p>
-            )}
+            {errors.passoutYear && <p className="text-red-500 text-sm">{errors.passoutYear}</p>}
           </div>
 
           {/* Password (full width) */}
@@ -147,27 +170,26 @@ function Signup() {
             </button>
             {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
           </div>
-
-          {/* Profile Photo (full width) */}
-          <div className="space-y-1 md:col-span-2">
-            <Input
-              name="profilePhoto"
-              type="file"
-              accept="image/*"
-              onChange={handleInputChange}
-            />
-            {errors.profilePhoto && (
-              <p className="text-red-500 text-sm">{errors.profilePhoto}</p>
-            )}
-          </div>
         </CardContent>
 
+        {errors.general && <p className="text-red-500 text-center mt-2">{errors.general}</p>}
+
         <CardFooter>
-          <Button type="submit" disabled={loading} className="w-full">
+          <Button type="submit" disabled={loading} className="w-full space-y-1">
             {loading ? <BeatLoader size={10} color="#fff" /> : "Signup"}
           </Button>
         </CardFooter>
       </form>
+
+      <p className="mx-auto mt-2">
+        Already have an account?{" "}
+        <span
+          onClick={() => navigate("/auth/login")}
+          className="text-yellow-400 underline cursor-pointer"
+        >
+          Login
+        </span>
+      </p>
     </Card>
   );
 }

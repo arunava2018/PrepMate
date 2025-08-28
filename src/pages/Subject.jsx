@@ -119,7 +119,7 @@ const dummyQuestions = {
 const SubjectPage = () => {
   const { id } = useParams();
   const subjectId = parseInt(id);
-  const subject = subjects[subjectId];
+  const subject = subjects[subjectId - 1];
 
   return (
     <div className="p-6">

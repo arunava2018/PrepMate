@@ -7,25 +7,33 @@ import Subject from "./pages/Subject";
 import { ThemeProvider } from "./theme/Themeprovides";
 import Dashboard from "./pages/Dashboard";
 import Addquestion from "./pages/Addquestion";
+import UrlProvider from "./context";
+import Profile from "./pages/Profile";
+import GuestRoute from "./components/GuestRoute";
+import RequireAuth from "./components/RequireAuth";
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout />, // ✅ Wraps Header + Footer
+    element: <AppLayout />,
     children: [
       { path: "/", element: <Landing /> },
       { path: "/auth/:mode", element: <Auth /> },
       { path: "/dashboard", element: <Dashboard /> },
       { path: "/add-question", element: <Addquestion /> },
-      { path: "/subject/:id", element: <Subject /> },
+      { path: "/subject/:id", element: <RequireAuth><Subject /></RequireAuth> },
+      { path: "/profile", element: <Profile/>}
     ],
   },
 ]);
 
 function App() {
   return (
-    <ThemeProvider>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <UrlProvider>
+      <ThemeProvider>
+        {/* ✅ Wrap your app here */}
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </UrlProvider>
   );
 }
 
