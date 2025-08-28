@@ -11,6 +11,8 @@ import UrlProvider from "./context";
 import Profile from "./pages/Profile";
 import GuestRoute from "./components/GuestRoute";
 import RequireAuth from "./components/RequireAuth";
+import Admin from "./pages/Admin";
+import RequireAdmin from "./components/RequireAdmin";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +23,8 @@ const router = createBrowserRouter([
       { path: "/dashboard", element: <Dashboard /> },
       { path: "/add-question", element: <Addquestion /> },
       { path: "/subject/:id", element: <RequireAuth><Subject /></RequireAuth> },
-      { path: "/profile", element: <Profile/>}
+      { path: "/profile", element: <Profile/>},
+      { path: "/admin", element: <RequireAdmin><Admin/></RequireAdmin>}
     ],
   },
 ]);

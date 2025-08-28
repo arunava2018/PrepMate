@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sun, Moon, Menu, X } from "lucide-react";
@@ -16,18 +16,29 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UrlState } from "../context";
 import { signout } from "@/db/apiAuth";
 import useFetch from "@/hooks/useFetch";
-
+import { isAdminUser } from "@/db/apiAdmin";
 export default function Navbar() {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const isDark = theme === "dark";
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   // ✅ Get user from context
   const { user, fetchUser } = UrlState();
   const isAuthenticated = !!user?.id;
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const checkAdmin = async () => {
+      const admin = await isAdminUser(user?.id);
+      setIsAdmin(admin);
+    };
+
+    checkAdmin();
+  }, [user]);
   // console.log(isAuthenticated);
   const { loading, fn: fnLogOut } = useFetch(signout);
-  
+
   return (
     <nav className="relative top-0 left-0 w-full z-50 bg-white/80 dark:bg-neutral-900/80 backdrop-blur shadow-sm transition-colors">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -79,14 +90,19 @@ export default function Navbar() {
                 <DropdownMenuItem asChild className="cursor-pointer">
                   <Link to="/profile">Profile</Link>
                 </DropdownMenuItem>
+                {isAdmin && (
+                  <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link to="/admin">Add Questions</Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => {
                     // signout logic here
-                    fnLogOut().then(()=>{
+                    fnLogOut().then(() => {
                       fetchUser();
                       navigate("/");
-                    })
+                    });
                   }}
                   className="text-red-500 focus:text-red-500 cursor-pointer"
                 >
