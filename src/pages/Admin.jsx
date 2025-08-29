@@ -1,140 +1,75 @@
-import { subjects } from "@/subjects";
-import subjectSubtopics from "@/subjectSubtopic";
-import React, { useState } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { UrlState } from "@/context";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { motion } from "framer-motion";
+import { FilePlus, BookOpen, ListPlus } from "lucide-react"; // icons for better differentiation
 
-export default function Admin() {
-  const [form, setForm] = useState({
-    subject: "",
-    subtopic: "",
-    question: "",
-    answer: "",
-  });
+export default function AdminDashboard() {
+  const { user } = UrlState();
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Data:", form);
-    setForm({ subject: "", subtopic: "", question: "", answer: "" });
-  };
-
-  const availableSubtopics = subjectSubtopics[form.subject] || [];
+  const cards = [
+    {
+      title: "Add Question",
+      desc: "Create new questions with subject & subtopic mapping.",
+      path: "/admin/addQuestion",
+      icon: <FilePlus className="w-6 h-6 text-yellow-500 dark:text-yellow-400" />,
+    },
+    {
+      title: "Add Subject",
+      desc: "Introduce a new subject with its description.",
+      path: "/admin/addSubject",
+      icon: <BookOpen className="w-6 h-6 text-blue-500 dark:text-blue-400" />,
+    },
+    {
+      title: "Add Subtopic",
+      desc: "Organize subjects by adding structured subtopics.",
+      path: "/admin/addSubtopic",
+      icon: <ListPlus className="w-6 h-6 text-green-500 dark:text-green-400" />,
+    },
+  ];
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 p-6 border rounded-xl shadow-lg 
-      bg-white dark:bg-black dark:border-gray-800">
-      
-      <h2 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white text-center">
-        Add New Question
-      </h2>
+    <div className="max-w-5xl mx-auto mt-10 p-6">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-10">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+          Hello, {user?.name || "Admin"}
+        </h1>
+        <span className="bg-red-400 w-fit text-white text-sm px-3 py-1 rounded-full shadow">
+          Admin
+        </span>
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Subject + Subtopic in Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Subject Dropdown */}
-          <div>
-            <label className="block mb-2 font-medium text-gray-800 dark:text-gray-200">
-              Subject
-            </label>
-            <select
-              name="subject"
-              value={form.subject}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg 
-                bg-gray-50 dark:bg-gray-900 
-                text-gray-900 dark:text-gray-100 
-                border-gray-300 dark:border-gray-700
-                focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
-              required
-            >
-              <option value="">Select Subject</option>
-              {subjects.map((subj) => (
-                <option key={subj.id} value={subj.name}>
-                  {subj.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Subtopic Dropdown */}
-          <div>
-            <label className="block mb-2 font-medium text-gray-800 dark:text-gray-200">
-              Subtopic
-            </label>
-            <select
-              name="subtopic"
-              value={form.subtopic}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-lg 
-                bg-gray-50 dark:bg-gray-900 
-                text-gray-900 dark:text-gray-100 
-                border-gray-300 dark:border-gray-700
-                focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 
-                disabled:bg-gray-100 dark:disabled:bg-gray-800
-                disabled:text-gray-400 dark:disabled:text-gray-600"
-              required
-              disabled={!form.subject}
-            >
-              <option value="">Select Subtopic</option>
-              {availableSubtopics.map((topic, idx) => (
-                <option key={idx} value={topic}>
-                  {topic}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* Question */}
-        <div>
-          <label className="block mb-2 font-medium text-gray-800 dark:text-gray-200">
-            Question
-          </label>
-          <textarea
-            name="question"
-            placeholder="Write your question..."
-            value={form.question}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg 
-              bg-gray-50 dark:bg-gray-900 
-              text-gray-900 dark:text-gray-100 
-              border-gray-300 dark:border-gray-700
-              focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
-            rows="3"
-            required
-          />
-        </div>
-
-        {/* Answer */}
-        <div>
-          <label className="block mb-2 font-medium text-gray-800 dark:text-gray-200">
-            Answer
-          </label>
-          <textarea
-            name="answer"
-            placeholder="Write the answer..."
-            value={form.answer}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg 
-              bg-gray-50 dark:bg-gray-900 
-              text-gray-900 dark:text-gray-100 
-              border-gray-300 dark:border-gray-700
-              focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
-            rows="3"
-            required
-          />
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors"
-        >
-          Save Question
-        </button>
-      </form>
+      {/* Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {cards.map((card, idx) => (
+          <motion.div
+            key={card.title}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: idx * 0.15, duration: 0.4 }}
+            whileHover={{ scale: 1.05 }}
+            onClick={() => navigate(card.path)}
+            className="cursor-pointer"
+          >
+            <Card className="h-full shadow-md hover:shadow-lg transition-shadow bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+              <CardHeader>
+                <div className="flex items-center gap-3 mb-2">
+                  {card.icon}
+                  <CardTitle className="text-lg text-gray-900 dark:text-gray-100">
+                    {card.title}
+                  </CardTitle>
+                </div>
+                <CardDescription className="text-gray-600 dark:text-gray-400">
+                  {card.desc}
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
 }

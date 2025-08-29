@@ -13,6 +13,8 @@ import GuestRoute from "./components/GuestRoute";
 import RequireAuth from "./components/RequireAuth";
 import Admin from "./pages/Admin";
 import RequireAdmin from "./components/RequireAdmin";
+import Addsubject from "./pages/Addsubject";
+import Addsubtopic from "./pages/Addsubtopic";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +26,11 @@ const router = createBrowserRouter([
       { path: "/add-question", element: <Addquestion /> },
       { path: "/subject/:id", element: <RequireAuth><Subject /></RequireAuth> },
       { path: "/profile", element: <Profile/>},
-      { path: "/admin", element: <RequireAdmin><Admin/></RequireAdmin>}
+      { path: "/admin", element: <RequireAdmin><Admin/></RequireAdmin>},
+      { path: "/admin/addQuestion", element: <RequireAdmin><Addquestion/></RequireAdmin>},
+      { path: "/admin/addSubject", element: <RequireAdmin><Addsubject/></RequireAdmin>},
+      { path: "/admin/addSubtopic", element: <RequireAdmin><Addsubtopic/></RequireAdmin>},
+      
     ],
   },
 ]);

@@ -92,7 +92,7 @@ export default function Navbar() {
                 </DropdownMenuItem>
                 {isAdmin && (
                   <DropdownMenuItem asChild className="cursor-pointer">
-                    <Link to="/admin">Add Questions</Link>
+                    <Link to="/admin">Admin Panel</Link>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
