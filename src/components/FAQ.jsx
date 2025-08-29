@@ -37,7 +37,7 @@ export default function FAQ() {
   return (
     <motion.section
       id="faq"
-      className="py-20 bg-neutral-50 dark:bg-neutral-900 transition-colors"
+      className="py-20 bg-neutral-50 dark:bg-[#000000] transition-colors"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}

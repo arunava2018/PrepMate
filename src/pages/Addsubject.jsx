@@ -21,6 +21,7 @@ import {
   Cloud,
   GitBranch,
 } from "lucide-react";
+import Loader from "@/components/Loader";
 
 // Subject related icons
 const subjectIcons = [
@@ -45,7 +46,7 @@ export default function AddSubject() {
   const [successMsg, setSuccessMsg] = useState("");
 
   const { loading, error, fn: saveSubject } = useFetch(addSubject);
-
+  
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -66,7 +67,7 @@ export default function AddSubject() {
       return () => clearTimeout(timer);
     }
   }, [successMsg, error]);
-
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

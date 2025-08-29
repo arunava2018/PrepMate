@@ -65,7 +65,7 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <section className="py-20 bg-yellow-50 dark:bg-neutral-900 px-6">
+    <section className="py-20 bg-yellow-50 dark:bg-[#000000] px-6">
       <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900 dark:text-yellow-400">
         What People Are Saying
       </h2>

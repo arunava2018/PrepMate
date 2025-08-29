@@ -50,7 +50,7 @@ export default function HeroSection() {
         transition={{ duration: 0.8, delay: 0.5 }}
         className="max-w-2xl text-lg sm:text-xl text-neutral-600 dark:text-neutral-300 mb-8 relative z-10"
       >
-        PrepMate offers a structured collection of admin-curated questions,
+        PrepMate offers a structured collection of curated core <span className="font-bold">Computer Fundamentals</span> questions,
         organized by subjects and subtopics — helping you focus on what really
         matters for interviews and exams.
       </motion.p>
