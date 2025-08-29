@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -36,13 +35,22 @@ const iconMap = {
 const Dashboard = () => {
   const navigate = useNavigate();
   const { data, loading, error, fn: fnSubjects } = useFetch(getSubjects);
-
+  function slugify(text) {
+    return text
+      .toString()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, "-") // replace spaces with hyphens
+      .replace(/[^a-zA-Z0-9-]/g, "") // remove other special chars
+      .trim();
+  }
   useEffect(() => {
     fnSubjects();
   }, []);
 
-  if (loading) return <Loader/>;
-  if (error) return <p className="text-center text-red-500">Error: {error.message}</p>;
+  if (loading) return <Loader />;
+  if (error)
+    return <p className="text-center text-red-500">Error: {error.message}</p>;
 
   return (
     <div className="p-6">
@@ -56,7 +64,7 @@ const Dashboard = () => {
           return (
             <Card
               key={subj.id}
-              onClick={() => navigate(`/subject/${subj.name}/${subj.id}`)}
+              onClick={() => navigate(`/subject/${slugify(subj.name)}/${subj.id}`)}
               className="cursor-pointer group transition transform hover:scale-105 hover:shadow-xl"
             >
               <CardHeader className="flex flex-col items-center relative">

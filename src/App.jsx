@@ -24,7 +24,7 @@ const router = createBrowserRouter([
       { path: "/auth/:mode", element: <Auth /> },
       { path: "/dashboard", element: <Dashboard /> },
       { path: "/add-question", element: <Addquestion /> },
-      { path: "/subject/:id", element: <RequireAuth><Subject /></RequireAuth> },
+      { path: "/subject/:slug/:id", element: <RequireAuth><Subject /></RequireAuth> },
       { path: "/profile", element: <Profile/>},
       { path: "/admin", element: <RequireAdmin><Admin/></RequireAdmin>},
       { path: "/admin/addQuestion", element: <RequireAdmin><Addquestion/></RequireAdmin>},

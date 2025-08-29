@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UrlState } from "@/context";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { FilePlus, BookOpen, ListPlus } from "lucide-react"; // icons for better differentiation
+import { FilePlus, BookOpen, ListPlus } from "lucide-react";
+import Loader from "@/components/Loader"; // your loader component
 
 export default function AdminDashboard() {
   const { user } = UrlState();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false); // <-- loader state
 
   const cards = [
     {
@@ -30,6 +32,16 @@ export default function AdminDashboard() {
     },
   ];
 
+  const handleNavigate = (path) => {
+  setLoading(true); // start loader
+  setTimeout(() => {
+    navigate(path);
+  }, 1000); // 100ms delay
+};
+
+  // Show loader while navigating
+  if (loading) return <Loader />;
+
   return (
     <div className="max-w-5xl mx-auto mt-10 p-6">
       {/* Header */}
@@ -51,7 +63,7 @@ export default function AdminDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.15, duration: 0.4 }}
             whileHover={{ scale: 1.05 }}
-            onClick={() => navigate(card.path)}
+            onClick={() => handleNavigate(card.path)} // <-- use handler
             className="cursor-pointer"
           >
             <Card className="h-full shadow-md hover:shadow-lg transition-shadow bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
