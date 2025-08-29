@@ -1,11 +1,10 @@
-// Dashboard.jsx
+
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { getSubjects } from "@/db/apiSubjects";
 import useFetch from "@/hooks/useFetch";
 
-// lucide-react icons
 import {
   Server,
   Database,
@@ -19,8 +18,8 @@ import {
   GitBranch,
   Book,
 } from "lucide-react";
+import Loader from "@/components/Loader";
 
-// map string from DB -> actual icon component
 const iconMap = {
   server: Server,
   database: Database,
@@ -42,7 +41,7 @@ const Dashboard = () => {
     fnSubjects();
   }, []);
 
-  if (loading) return <p className="text-center">Loading...</p>;
+  if (loading) return <Loader/>;
   if (error) return <p className="text-center text-red-500">Error: {error.message}</p>;
 
   return (
@@ -57,7 +56,7 @@ const Dashboard = () => {
           return (
             <Card
               key={subj.id}
-              onClick={() => navigate(`/subject/${subj.id}`)}
+              onClick={() => navigate(`/subject/${subj.name}/${subj.id}`)}
               className="cursor-pointer group transition transform hover:scale-105 hover:shadow-xl"
             >
               <CardHeader className="flex flex-col items-center relative">

@@ -4,22 +4,22 @@ const faqs = [
   {
     question: "What is PrepMate?",
     answer:
-      "PrepMate is your personal Computer Science Q&A bank where you can store, organize, and revise interview questions quickly.",
-  },
-  {
-    question: "Can I add my own questions?",
-    answer:
-      "Yes! You can add your own questions and answers, including formatted text, images, and code snippets for better revision.",
+      "PrepMate is your personal Computer Science Q&A bank, curated by experts, to help you revise and prepare efficiently for interviews and exams.",
   },
   {
     question: "Do I need to pay to use PrepMate?",
     answer:
-      "No, the core features are free. In future, we may introduce premium features like cloud backup and flashcards.",
+      "No, the core features are free. In the future, premium features like cloud backup and advanced analytics may be introduced.",
   },
   {
-    question: "Is my data safe?",
+    question: "Is my progress tracked?",
     answer:
-      "Absolutely. Your questions and answers are tied to your account, and only you can access them.",
+      "Yes! PrepMate tracks your progress subject-wise, showing question counts and performance stats to help you focus on weaker areas.",
+  },
+  {
+    question: "Is the content reliable?",
+    answer:
+      "Absolutely. Every question is carefully curated and verified by our admins to ensure accuracy and clarity.",
   },
   {
     question: "Can I access PrepMate on mobile?",
@@ -27,17 +27,21 @@ const faqs = [
       "Yes, the web app is fully responsive and works smoothly on mobile, tablet, and desktop.",
   },
   {
-    question: "Will there be preloaded questions?",
+    question: "Are there preloaded questions?",
     answer:
-      "Yes, we provide a set of common interview questions for each CS subject to get you started. You can edit or add more anytime.",
+      "Yes, PrepMate comes with a set of common interview questions for each CS subject, ready for practice and revision.",
   },
 ];
 
 export default function FAQ() {
   return (
-    <section
+    <motion.section
       id="faq"
       className="py-20 bg-neutral-50 dark:bg-neutral-900 transition-colors"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.8 }}
     >
       <div className="max-w-6xl mx-auto px-6">
         <h2 className="text-3xl font-bold text-center text-neutral-900 dark:text-white">
@@ -47,7 +51,6 @@ export default function FAQ() {
           Everything you need to know about PrepMate
         </p>
 
-        {/* Grid */}
         <div className="mt-12 grid md:grid-cols-2 gap-10">
           {faqs.map((faq, i) => (
             <motion.div
@@ -56,7 +59,7 @@ export default function FAQ() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
               viewport={{ once: true }}
-              className="bg-white dark:bg-neutral-800 p-6 rounded-2xl shadow-sm"
+              className="bg-white dark:bg-neutral-800 p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300"
             >
               <h3 className="text-lg font-semibold text-neutral-900 dark:text-white">
                 {faq.question}
@@ -68,6 +71,6 @@ export default function FAQ() {
           ))}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

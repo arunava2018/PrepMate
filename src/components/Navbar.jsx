@@ -17,15 +17,19 @@ import { UrlState } from "../context";
 import { signout } from "@/db/apiAuth";
 import useFetch from "@/hooks/useFetch";
 import { isAdminUser } from "@/db/apiAdmin";
+
 export default function Navbar() {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const isDark = theme === "dark";
   const [menuOpen, setMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  // ✅ Get user from context
+  const [scrolled, setScrolled] = useState(false);
+
   const { user, fetchUser } = UrlState();
   const isAuthenticated = !!user?.id;
+
+  // Check if user is admin
   useEffect(() => {
     if (!user?.id) return;
 
@@ -36,16 +40,26 @@ export default function Navbar() {
 
     checkAdmin();
   }, [user]);
-  // console.log(isAuthenticated);
+
+  // Add shadow on scroll
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const { loading, fn: fnLogOut } = useFetch(signout);
 
   return (
-    <nav className="relative top-0 left-0 w-full z-50 bg-white/80 dark:bg-neutral-900/80 backdrop-blur shadow-sm transition-colors">
+    <nav
+      className={`sticky top-0 left-0 w-full z-50 backdrop-blur-md transition-colors 
+      bg-white/80 dark:bg-neutral-900/80 ${scrolled ? "shadow-lg" : "shadow-sm"}`}
+    >
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
         <Link
           to="/"
-          className="text-2xl font-bold text-yellow-600 dark:text-yellow-400"
+          className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 hover:scale-105 transition-transform"
         >
           PrepMate
         </Link>
@@ -56,7 +70,7 @@ export default function Navbar() {
             <>
               <Link
                 to="/auth/login"
-                className="hover:text-yellow-600 dark:hover:text-yellow-400"
+                className="hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors"
               >
                 Login
               </Link>
@@ -69,42 +83,45 @@ export default function Navbar() {
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="focus:outline-none">
-                  <Avatar>
+                <motion.button
+                  className="focus:outline-none"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Avatar className="transition-transform">
                     {user?.profile_photo ? (
                       <AvatarImage src={user.profile_photo} alt={user.name} />
                     ) : (
                       <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
                     )}
                   </Avatar>
-                </button>
+                </motion.button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>
-                  <p className="font-bold">Hi. {user?.name}</p>
+                  <p className="font-bold">Hi, {user?.name}</p>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild className="cursor-pointer">
+                <DropdownMenuItem asChild className="cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900 transition-colors rounded-md">
                   <Link to="/dashboard">Dashboard</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer">
+                <DropdownMenuItem asChild className="cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900 transition-colors rounded-md">
                   <Link to="/profile">Profile</Link>
                 </DropdownMenuItem>
                 {isAdmin && (
-                  <DropdownMenuItem asChild className="cursor-pointer">
+                  <DropdownMenuItem asChild className="cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900 transition-colors rounded-md">
                     <Link to="/admin">Admin Panel</Link>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => {
-                    // signout logic here
                     fnLogOut().then(() => {
                       fetchUser();
                       navigate("/");
                     });
                   }}
-                  className="text-red-500 focus:text-red-500 cursor-pointer"
+                  className="text-red-500 focus:text-red-500 cursor-pointer hover:bg-red-100 dark:hover:bg-red-900 transition-colors rounded-md"
                 >
                   Sign Out
                 </DropdownMenuItem>
@@ -113,14 +130,21 @@ export default function Navbar() {
           )}
 
           {/* Theme toggle */}
-          <button
+          <motion.button
             type="button"
             aria-label="Toggle theme"
             onClick={() => setTheme(isDark ? "light" : "dark")}
             className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-neutral-200 dark:border-neutral-700 hover:scale-105 transition"
           >
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
+            <motion.div
+              key={theme}
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              {isDark ? <Sun size={18} /> : <Moon size={18} />}
+            </motion.div>
+          </motion.button>
         </div>
 
         {/* Mobile Hamburger */}
@@ -136,22 +160,22 @@ export default function Navbar() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
             className="md:hidden bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800 px-6 py-4 space-y-4"
           >
             <a
               href="#features"
-              className="block hover:text-yellow-600 dark:hover:text-yellow-400 font-medium"
+              className="block hover:text-yellow-600 dark:hover:text-yellow-400 font-medium transition-transform hover:scale-105"
               onClick={() => setMenuOpen(false)}
             >
               Features
             </a>
             <a
               href="#faq"
-              className="block hover:text-yellow-600 dark:hover:text-yellow-400 font-medium"
+              className="block hover:text-yellow-600 dark:hover:text-yellow-400 font-medium transition-transform hover:scale-105"
               onClick={() => setMenuOpen(false)}
             >
               FAQ
@@ -161,7 +185,7 @@ export default function Navbar() {
               <>
                 <Link
                   to="/auth/login"
-                  className="block hover:text-yellow-600 dark:hover:text-yellow-400"
+                  className="block hover:text-yellow-600 dark:hover:text-yellow-400 transition-transform hover:scale-105"
                   onClick={() => setMenuOpen(false)}
                 >
                   Login
@@ -173,30 +197,33 @@ export default function Navbar() {
                 </Link>
               </>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-2 border-t border-neutral-200 dark:border-neutral-700 pt-4">
                 <p className="font-medium text-neutral-700 dark:text-neutral-300">
                   {user?.name}
                 </p>
                 <Link
                   to="/dashboard"
-                  className="block hover:text-yellow-600 dark:hover:text-yellow-400"
+                  className="block hover:text-yellow-600 dark:hover:text-yellow-400 transition-transform hover:scale-105"
                   onClick={() => setMenuOpen(false)}
                 >
                   Dashboard
                 </Link>
                 <Link
                   to="/profile"
-                  className="block hover:text-yellow-600 dark:hover:text-yellow-400"
+                  className="block hover:text-yellow-600 dark:hover:text-yellow-400 transition-transform hover:scale-105"
                   onClick={() => setMenuOpen(false)}
                 >
                   Profile
                 </Link>
                 <button
                   onClick={() => {
-                    // signout logic here
-                    setMenuOpen(false);
+                    fnLogOut().then(() => {
+                      fetchUser();
+                      navigate("/");
+                      setMenuOpen(false);
+                    });
                   }}
-                  className="block text-red-500 hover:text-red-600"
+                  className="block text-red-500 hover:text-red-600 transition-colors"
                 >
                   Sign Out
                 </button>
@@ -204,7 +231,7 @@ export default function Navbar() {
             )}
 
             {/* Theme toggle */}
-            <button
+            <motion.button
               type="button"
               aria-label="Toggle theme"
               onClick={() => setTheme(isDark ? "light" : "dark")}
@@ -212,7 +239,7 @@ export default function Navbar() {
             >
               {isDark ? <Sun size={18} /> : <Moon size={18} />}
               <span>{isDark ? "Light Mode" : "Dark Mode"}</span>
-            </button>
+            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>

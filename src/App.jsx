@@ -9,7 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import Addquestion from "./pages/Addquestion";
 import UrlProvider from "./context";
 import Profile from "./pages/Profile";
-import GuestRoute from "./components/GuestRoute";
+// import GuestRoute from "./components/GuestRoute";
 import RequireAuth from "./components/RequireAuth";
 import Admin from "./pages/Admin";
 import RequireAdmin from "./components/RequireAdmin";
