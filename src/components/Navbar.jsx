@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sun, Moon, Menu, X } from "lucide-react";
-import { useTheme } from "../theme/ThemeProvides";
+import { useTheme } from "../theme/Themeprovides";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   DropdownMenu,
