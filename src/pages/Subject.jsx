@@ -24,8 +24,6 @@ import "@/styles/hljs-line-numbers.css";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 
-
-
 function Subject() {
   const { id } = useParams();
   const [subject, setSubject] = useState(null);
@@ -207,6 +205,12 @@ function Subject() {
                           td: ({ node, ...props }) => (
                             <td
                               className="border border-neutral-400 dark:border-neutral-600 px-3 py-1"
+                              {...props}
+                            />
+                          ),
+                          img: ({ node, ...props }) => (
+                            <img
+                              className="max-w-[300px] h-auto rounded-md my-2 mx-auto"
                               {...props}
                             />
                           ),
