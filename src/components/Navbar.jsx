@@ -53,7 +53,9 @@ export default function Navbar() {
   return (
     <nav
       className={`sticky top-0 left-0 w-full z-50 backdrop-blur-md transition-colors 
-      bg-white/80 dark:bg-neutral-900/80 ${scrolled ? "shadow-lg" : "shadow-sm"}`}
+      bg-white/80 dark:bg-neutral-900/80 ${
+        scrolled ? "shadow-lg" : "shadow-sm"
+      }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
@@ -102,14 +104,23 @@ export default function Navbar() {
                   <p className="font-bold">Hi, {user?.name}</p>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild className="cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900 transition-colors rounded-md">
+                <DropdownMenuItem
+                  asChild
+                  className="cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900 transition-colors rounded-md"
+                >
                   <Link to="/dashboard">Dashboard</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild className="cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900 transition-colors rounded-md">
+                <DropdownMenuItem
+                  asChild
+                  className="cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900 transition-colors rounded-md"
+                >
                   <Link to="/profile">Profile</Link>
                 </DropdownMenuItem>
                 {isAdmin && (
-                  <DropdownMenuItem asChild className="cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900 transition-colors rounded-md">
+                  <DropdownMenuItem
+                    asChild
+                    className="cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900 transition-colors rounded-md"
+                  >
                     <Link to="/admin">Admin Panel</Link>
                   </DropdownMenuItem>
                 )}
@@ -215,6 +226,18 @@ export default function Navbar() {
                 >
                   Profile
                 </Link>
+
+                {/* ✅ Added Admin Panel for mobile */}
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    className="block hover:text-yellow-600 dark:hover:text-yellow-400 transition-transform hover:scale-105"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Admin Panel
+                  </Link>
+                )}
+
                 <button
                   onClick={() => {
                     fnLogOut().then(() => {
