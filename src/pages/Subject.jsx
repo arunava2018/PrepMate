@@ -17,6 +17,15 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import { getIcon } from "@/utils/iconmap";
 
+import hljs from "highlight.js";
+import "highlight.js/styles/github-dark.css";
+import "highlightjs-line-numbers.js";
+import "@/styles/hljs-line-numbers.css";
+import rehypeHighlight from "rehype-highlight";
+import remarkGfm from "remark-gfm";
+
+
+
 function Subject() {
   const { id } = useParams();
   const [subject, setSubject] = useState(null);
@@ -25,6 +34,7 @@ function Subject() {
   const [completed, setCompleted] = useState(new Set());
 
   const { loading, fn: fnSubjects } = useFetch(getSubjectById);
+
   // get subject by id
   useEffect(() => {
     fnSubjects(id).then((res) => {
@@ -51,6 +61,18 @@ function Subject() {
     };
     fetchAll();
   }, [subtopics]);
+
+  // re-run highlighting + line numbers when questions update
+  useEffect(() => {
+    hljs.highlightAll();
+    document.querySelectorAll("pre code").forEach((block) => {
+      try {
+        hljs.lineNumbersBlock(block);
+      } catch (e) {
+        console.warn("Line numbers skipped:", e);
+      }
+    });
+  }, [questions]);
 
   if (loading) return <Loader />;
   if (!subject) return <p>Loading or subject not found</p>;
@@ -96,9 +118,16 @@ function Subject() {
                         {q.question_text}
                       </p>
 
-                      {/* Answer rendered as markdown */}
+                      {/* React Markdown */}
                       <ReactMarkdown
-                        rehypePlugins={[rehypeRaw]}
+                        remarkPlugins={[remarkGfm]}
+                        rehypePlugins={[
+                          rehypeRaw,
+                          [
+                            rehypeHighlight,
+                            { detect: true, ignoreMissing: true },
+                          ],
+                        ]}
                         components={{
                           p: ({ node, ...props }) => (
                             <p
@@ -144,17 +173,25 @@ function Subject() {
                               {...props}
                             />
                           ),
-                          code: ({ inline, ...props }) =>
-                            inline ? (
+                          code: ({ inline, className, children, ...props }) => {
+                            const match = /language-(\w+)/.exec(
+                              className || ""
+                            );
+                            return inline ? (
                               <code
                                 className="px-1 py-0.5 bg-neutral-100 dark:bg-neutral-800 rounded text-sm font-mono"
                                 {...props}
-                              />
+                              >
+                                {children}
+                              </code>
                             ) : (
                               <pre className="p-3 bg-neutral-100 dark:bg-neutral-900 rounded-lg overflow-x-auto text-sm">
-                                <code {...props} />
+                                <code className={className} {...props}>
+                                  {children}
+                                </code>
                               </pre>
-                            ),
+                            );
+                          },
                           table: ({ node, ...props }) => (
                             <table
                               className="table-auto border-collapse border border-neutral-400 dark:border-neutral-600 my-3"
