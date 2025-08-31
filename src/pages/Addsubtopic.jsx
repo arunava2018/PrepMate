@@ -18,7 +18,7 @@ function Addsubtopic() {
 
   useEffect(() => {
     fnSubjects();
-  }, []);
+  }, [form]);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));

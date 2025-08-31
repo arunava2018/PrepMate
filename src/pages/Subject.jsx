@@ -5,7 +5,6 @@ import { getSubjectById } from "@/db/apiSubjects";
 import { fetchSubtopics } from "@/db/apiSubtopic";
 import { fetchQuestions } from "@/db/apiQuestion";
 import Loader from "@/components/Loader";
-
 import {
   Accordion,
   AccordionItem,
@@ -15,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
 function Subject() {
   const { id } = useParams();
@@ -23,13 +23,12 @@ function Subject() {
   const [questions, setQuestions] = useState({});
   const [completed, setCompleted] = useState(new Set());
 
-  // ✅ only one useFetch for subject by ID
-  const { data: subjectData, loading, error, fn: fetchSubject } = useFetch(getSubjectById);
+  const { loading, fn: fnSubjects } = useFetch(getSubjectById);
 
   // get subject by id
   useEffect(() => {
-    fetchSubject(id).then((res) => {
-      setSubject(res || null);
+    fnSubjects(id).then((res) => {
+      setSubject(res);
     });
   }, [id]);
 
@@ -90,12 +89,14 @@ function Subject() {
                       key={q.id}
                       className="p-4 border rounded-lg dark:border-neutral-700"
                     >
+                      {/* Question */}
                       <p className="text-lg font-medium text-neutral-800 dark:text-neutral-200">
                         {q.question_text}
                       </p>
 
                       {/* Answer rendered as markdown */}
                       <ReactMarkdown
+                        rehypePlugins={[rehypeRaw]}
                         components={{
                           p: ({ node, ...props }) => (
                             <p
@@ -112,6 +113,20 @@ function Subject() {
                           em: ({ node, ...props }) => (
                             <em
                               className="italic text-neutral-600 dark:text-neutral-400"
+                              {...props}
+                            />
+                          ),
+                          blockquote: ({ node, ...props }) => (
+                            <blockquote
+                              className="border-l-4 border-yellow-500 pl-4 italic text-neutral-700 dark:text-neutral-300 mt-3"
+                              {...props}
+                            />
+                          ),
+                          a: ({ node, ...props }) => (
+                            <a
+                              className="text-yellow-600 dark:text-yellow-400 underline hover:opacity-80"
+                              target="_blank"
+                              rel="noopener noreferrer"
                               {...props}
                             />
                           ),
@@ -138,11 +153,30 @@ function Subject() {
                                 <code {...props} />
                               </pre>
                             ),
+                          table: ({ node, ...props }) => (
+                            <table
+                              className="table-auto border-collapse border border-neutral-400 dark:border-neutral-600 my-3"
+                              {...props}
+                            />
+                          ),
+                          th: ({ node, ...props }) => (
+                            <th
+                              className="border border-neutral-400 dark:border-neutral-600 px-3 py-1 bg-neutral-100 dark:bg-neutral-800 text-left"
+                              {...props}
+                            />
+                          ),
+                          td: ({ node, ...props }) => (
+                            <td
+                              className="border border-neutral-400 dark:border-neutral-600 px-3 py-1"
+                              {...props}
+                            />
+                          ),
                         }}
                       >
                         {q.answer_text}
                       </ReactMarkdown>
 
+                      {/* Mark complete button */}
                       <Button
                         size="sm"
                         variant={completed.has(q.id) ? "secondary" : "outline"}
