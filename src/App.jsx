@@ -15,6 +15,7 @@ import Admin from "./pages/Admin";
 import RequireAdmin from "./components/RequireAdmin";
 import Addsubject from "./pages/Addsubject";
 import Addsubtopic from "./pages/Addsubtopic";
+import Features from "./components/Feature";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Landing /> },
       { path: "/auth/:mode", element: <Auth /> },
       { path: "/dashboard", element: <Dashboard /> },
+      { path: "/features", element: <Features/> },
       { path: "/add-question", element: <Addquestion /> },
       { path: "/subject/:slug/:id", element: <RequireAuth><Subject /></RequireAuth> },
       { path: "/profile", element: <Profile/>},

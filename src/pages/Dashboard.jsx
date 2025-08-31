@@ -4,33 +4,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { getSubjects } from "@/db/apiSubjects";
 import useFetch from "@/hooks/useFetch";
 
-import {
-  Server,
-  Database,
-  Network,
-  Workflow,
-  Cpu,
-  Code2,
-  Terminal,
-  Lock,
-  Cloud,
-  GitBranch,
-  Book,
-} from "lucide-react";
 import Loader from "@/components/Loader";
-
-const iconMap = {
-  server: Server,
-  database: Database,
-  network: Network,
-  workflow: Workflow,
-  cpu: Cpu,
-  code2: Code2,
-  terminal: Terminal,
-  lock: Lock,
-  cloud: Cloud,
-  gitbranch: GitBranch,
-};
+import { getIcon } from "@/utils/iconmap";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -59,8 +34,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {data?.map((subj) => {
           // subj.icon will be like "server", "database" etc.
-          const Icon = iconMap[subj.icon?.toLowerCase()] || Book;
-
+          const Icon = getIcon(subj.icon);
           return (
             <Card
               key={subj.id}

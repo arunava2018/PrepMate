@@ -64,10 +64,10 @@ export default function HeroSection() {
       >
         <Link to="/dashboard">
           <Button className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-full text-lg shadow-lg hover:shadow-xl transition">
-            Explore
+            Explore our Content
           </Button>
         </Link>
-        <Link to="#features">
+        <Link to="/features">
           <Button
             variant="outline"
             className="border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-neutral-800 px-6 py-3 rounded-full text-lg"

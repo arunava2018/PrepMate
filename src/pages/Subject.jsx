@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
+import { getIcon } from "@/utils/iconmap";
 
 function Subject() {
   const { id } = useParams();
@@ -24,7 +25,6 @@ function Subject() {
   const [completed, setCompleted] = useState(new Set());
 
   const { loading, fn: fnSubjects } = useFetch(getSubjectById);
-
   // get subject by id
   useEffect(() => {
     fnSubjects(id).then((res) => {
@@ -54,6 +54,7 @@ function Subject() {
 
   if (loading) return <Loader />;
   if (!subject) return <p>Loading or subject not found</p>;
+  const Icon = getIcon(subject.icon);
 
   // progress calculation
   const totalQ = Object.values(questions).flat().length;
@@ -62,8 +63,9 @@ function Subject() {
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-8">
-      <h1 className="text-3xl font-bold mb-7 text-yellow-600 dark:text-yellow-400">
-        <span>{subject.icon}</span>{subject.name}
+      <h1 className="text-3xl font-bold mb-7 text-yellow-600 dark:text-yellow-400 flex items-center gap-2">
+        <Icon className="w-7 h-7 text-yellow-600 dark:text-yellow-400" />
+        {subject.name}
       </h1>
 
       {/* Progress Bar */}
