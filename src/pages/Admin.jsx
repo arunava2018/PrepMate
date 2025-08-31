@@ -36,7 +36,7 @@ export default function AdminDashboard() {
   setLoading(true); // start loader
   setTimeout(() => {
     navigate(path);
-  }, 1000); // 100ms delay
+  }, 3000); // 100ms delay
 };
 
   // Show loader while navigating

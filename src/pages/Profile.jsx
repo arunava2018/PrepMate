@@ -3,7 +3,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { useNavigate} from "react-router-dom";
 function Profile() {
   const navigate = useNavigate();
-  setTimeout(() => navigate("/"), 2500);
+  setTimeout(() => navigate("/"), 3000);
   return (
     <div className="w-full h-screen flex items-center justify-center">
       <Alert

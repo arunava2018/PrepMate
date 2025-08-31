@@ -53,10 +53,12 @@ export default function RequireAdmin({ children }) {
 
     return (
       <AlertDialog open={true}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Access Denied</AlertDialogTitle>
-            <AlertDialogDescription>
+        <AlertDialogContent className="w-screen h-screen max-w-none max-h-none flex items-center justify-center">
+          <AlertDialogHeader className="text-center">
+            <AlertDialogTitle className="text-2xl">
+              Access Denied
+            </AlertDialogTitle>
+            <AlertDialogDescription className="mt-4 text-lg">
               You don’t have permission to view this page.
               <br />
               Redirecting you to the dashboard...
