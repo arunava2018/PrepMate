@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,15 +20,19 @@ const loginSchema = Yup.object().shape({
 
 export default function Login() {
   const navigate = useNavigate();
-  const { fetchUser } = UrlState(); // ✅ get fetchUser from context
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const { fetchUser } = UrlState();
+  const emailInputRef = useRef(null);
+
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [successAlert, setSuccessAlert] = useState(false);
+
+  useEffect(() => {
+    // Autofocus email input on mount
+    emailInputRef.current?.focus();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -43,18 +47,17 @@ export default function Login() {
       setLoading(true);
       await loginSchema.validate(formData, { abortEarly: false });
 
-      // 🚀 Call login API
+      // Call login API
       await login(formData);
 
-      // ✅ Refresh user in context (updates Navbar automatically)
+      // Refresh user in context
       await fetchUser();
 
-      // ✅ Show login success alert
+      // Show success alert
       setSuccessAlert(true);
 
       // Redirect after 2s
       setTimeout(() => navigate("/dashboard"), 2000);
-
     } catch (err) {
       if (err.inner) {
         const newErrors = {};
@@ -67,6 +70,13 @@ export default function Login() {
       setLoading(false);
     }
   };
+
+  // Disable submit if loading or validation errors or empty fields
+  const isSubmitDisabled =
+    loading ||
+    !formData.email ||
+    !formData.password ||
+    Object.keys(errors).length > 0;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -87,6 +97,7 @@ export default function Login() {
           placeholder="Enter your email"
           value={formData.email}
           onChange={handleInputChange}
+          ref={emailInputRef}
           required
         />
         {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
@@ -107,6 +118,7 @@ export default function Login() {
         <button
           type="button"
           onClick={() => setShowPassword((prev) => !prev)}
+          aria-label={showPassword ? "Hide password" : "Show password"}
           className="absolute right-3 top-8 text-gray-500 hover:text-gray-700"
         >
           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -117,12 +129,14 @@ export default function Login() {
       </div>
 
       {/* General error */}
-      {errors.general && <p className="text-red-500 text-sm">{errors.general}</p>}
+      {errors.general && (
+        <p className="text-red-500 text-sm">{errors.general}</p>
+      )}
 
       {/* Submit */}
       <Button
         type="submit"
-        disabled={loading}
+        disabled={isSubmitDisabled}
         className="w-full bg-yellow-600 hover:bg-yellow-700 text-white"
       >
         {loading ? <BeatLoader size={10} color="#fff" /> : "Login"}

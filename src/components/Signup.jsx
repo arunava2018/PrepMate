@@ -17,7 +17,7 @@ import { signup } from "../db/apiAuth";
 import { UrlState } from "../context";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-// ✅ Validation Schema
+// ✅ Validation Schema including confirmPassword
 const signupSchema = Yup.object().shape({
   name: Yup.string().required("Full name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -27,22 +27,29 @@ const signupSchema = Yup.object().shape({
     .min(2000, "Enter a valid year")
     .max(new Date().getFullYear() + 10, "Year too far")
     .required("Passout year is required"),
-  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Passwords must match")
+    .required("Confirm password is required"),
 });
 
 function Signup() {
   const navigate = useNavigate();
-  const { fetchUser } = UrlState(); // ✅ Get fetchUser from context
+  const { fetchUser } = UrlState();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     college: "",
     passoutYear: "",
     password: "",
+    confirmPassword: "",
   });
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [successAlert, setSuccessAlert] = useState(false);
 
@@ -59,8 +66,9 @@ function Signup() {
       setLoading(true);
       await signupSchema.validate(formData, { abortEarly: false });
 
-      // 1️⃣ Call signup API
-      await signup(formData);
+      // 1️⃣ Call signup API with formData excluding confirmPassword
+      const { confirmPassword, ...signupData } = formData;
+      await signup(signupData);
 
       // 2️⃣ Refresh user in context
       await fetchUser();
@@ -70,15 +78,12 @@ function Signup() {
 
       // 4️⃣ Automatically navigate to dashboard after 2s
       setTimeout(() => navigate("/dashboard"), 2000);
-
     } catch (err) {
       if (err?.inner) {
-        // Yup validation errors
         const newErrors = {};
         err.inner.forEach((e) => (newErrors[e.path] = e.message));
         setErrors(newErrors);
       } else {
-        // API errors
         setErrors({ general: err.message });
       }
     } finally {
@@ -113,7 +118,9 @@ function Signup() {
               value={formData.name}
               onChange={handleInputChange}
             />
-            {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+            {errors.name && (
+              <p className="text-red-500 text-sm">{errors.name}</p>
+            )}
           </div>
 
           {/* Email */}
@@ -125,7 +132,9 @@ function Signup() {
               value={formData.email}
               onChange={handleInputChange}
             />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email}</p>
+            )}
           </div>
 
           {/* College */}
@@ -137,7 +146,9 @@ function Signup() {
               value={formData.college}
               onChange={handleInputChange}
             />
-            {errors.college && <p className="text-red-500 text-sm">{errors.college}</p>}
+            {errors.college && (
+              <p className="text-red-500 text-sm">{errors.college}</p>
+            )}
           </div>
 
           {/* Passout Year */}
@@ -149,11 +160,13 @@ function Signup() {
               value={formData.passoutYear}
               onChange={handleInputChange}
             />
-            {errors.passoutYear && <p className="text-red-500 text-sm">{errors.passoutYear}</p>}
+            {errors.passoutYear && (
+              <p className="text-red-500 text-sm">{errors.passoutYear}</p>
+            )}
           </div>
 
-          {/* Password (full width) */}
-          <div className="space-y-1 relative md:col-span-2">
+          {/* Password */}
+          <div className="space-y-1 relative">
             <Input
               name="password"
               type={showPassword ? "text" : "password"}
@@ -165,17 +178,46 @@ function Signup() {
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
+              aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
-            {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password}</p>
+            )}
+          </div>
+
+          {/* Confirm Password */}
+          <div className="space-y-1 relative">
+            <Input
+              name="confirmPassword"
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((prev) => !prev)}
+              className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
+              aria-label={
+                showConfirmPassword ? "Hide confirm password" : "Show confirm password"
+              }
+            >
+              {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
+            )}
           </div>
         </CardContent>
 
-        {errors.general && <p className="text-red-500 text-center mt-2">{errors.general}</p>}
+        {errors.general && (
+          <p className="text-red-500 text-center mt-2">{errors.general}</p>
+        )}
 
         <CardFooter>
-          <Button type="submit" disabled={loading} className="w-full space-y-1">
+          <Button type="submit" disabled={loading} className="w-full space-y-1 mt-2 bg-yellow-600">
             {loading ? <BeatLoader size={10} color="#fff" /> : "Signup"}
           </Button>
         </CardFooter>
