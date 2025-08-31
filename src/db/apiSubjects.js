@@ -5,6 +5,16 @@ import supabase from "./supabase";
     const { data, error } = await supabase.rpc("get_subjects_with_question_count");
     if (error) throw new Error(error.message);
     return data;
+  } 
+
+  export async function getSubjectById(id) {
+    const { data, error } = await supabase
+      .from("subjects")
+      .select("*")
+      .eq("id", id)
+      .single();  
+    if (error) throw new Error(error.message);
+    return data;
   }
 
 

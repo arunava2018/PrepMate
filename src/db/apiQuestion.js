@@ -26,3 +26,14 @@ export async function addQuestion({ subject, subtopic, question, answer }) {
     if (error) throw new Error(error.message);
     return data;
 }
+
+export async function fetchQuestions(subtopicId) {
+  const { data, error } = await supabase
+    .from("questions")
+    .select("*")
+    .eq("subtopic_id", subtopicId)
+    .order("created_at", { ascending: true });
+
+  if (error) throw new Error(error.message);
+  return data;
+}
