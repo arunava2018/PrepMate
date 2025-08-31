@@ -35,6 +35,7 @@ const subjectIcons = [
   { label: "Cyber Security", value: "Lock", Icon: Lock },
   { label: "Cloud Computing", value: "Cloud", Icon: Cloud },
   { label: "Version Control (Git)", value: "GitBranch", Icon: GitBranch },
+  { label: "Object-Oriented Programming (OOP)", value: "Code2", Icon: Code2 },
 ];
 
 export default function AddSubject() {
@@ -46,7 +47,7 @@ export default function AddSubject() {
   const [successMsg, setSuccessMsg] = useState("");
 
   const { loading, error, fn: saveSubject } = useFetch(addSubject);
-  
+
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -67,7 +68,6 @@ export default function AddSubject() {
       return () => clearTimeout(timer);
     }
   }, [successMsg, error]);
-  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

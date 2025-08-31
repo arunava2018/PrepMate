@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Menu, X } from "lucide-react";
+import { Sun, Moon, Menu, X, LogOut, User, Settings, Shield } from "lucide-react";
 import { useTheme } from "../theme/Themeprovides";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -41,227 +41,299 @@ export default function Navbar() {
     checkAdmin();
   }, [user]);
 
-  // Add shadow on scroll
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const { loading, fn: fnLogOut } = useFetch(signout);
 
+  const handleLogout = async () => {
+    await fnLogOut();
+    fetchUser();
+    navigate("/");
+    setMenuOpen(false);
+  };
+
   return (
     <nav
-      className={`sticky top-0 left-0 w-full z-50 backdrop-blur-md transition-colors 
-      bg-white/80 dark:bg-neutral-900/80 ${
-        scrolled ? "shadow-lg" : "shadow-sm"
+      className={`sticky top-0 left-0 w-full z-50 backdrop-blur-md transition-all duration-300
+      bg-white/85 dark:bg-neutral-900/85 border-b border-neutral-200/50 dark:border-neutral-700/50 ${
+        scrolled ? "shadow-lg bg-white/95 dark:bg-neutral-900/95" : "shadow-sm"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo */}
-        <Link
-          to="/"
-          className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 hover:scale-105 transition-transform"
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          PrepMate
-        </Link>
+          <Link
+            to="/"
+            className="text-2xl font-bold bg-gradient-to-r from-yellow-500 to-yellow-600 bg-clip-text text-transparent hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300"
+          >
+            PrepMate
+          </Link>
+        </motion.div>
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-6">
           {!isAuthenticated ? (
             <>
-              <Link
-                to="/auth/login"
-                className="hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors"
+              <motion.div whileHover={{ y: -1 }} whileTap={{ y: 0 }}>
+                <Link
+                  to="/auth/login"
+                  className="hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors font-medium"
+                >
+                  Login
+                </Link>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                Login
-              </Link>
-              <Link to="/auth/signup">
-                <Button className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full px-4">
-                  Sign Up
-                </Button>
-              </Link>
+                <Link to="/auth/signup">
+                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full px-6 shadow-md hover:shadow-lg transition-all duration-200">
+                    Sign Up
+                  </Button>
+                </Link>
+              </motion.div>
             </>
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <motion.button
-                  className="focus:outline-none"
+                  className="focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 dark:focus:ring-offset-neutral-900 rounded-full transition-all"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Avatar className="transition-transform">
+                  <Avatar className="transition-all duration-200 hover:shadow-md">
                     {user?.profile_photo ? (
                       <AvatarImage src={user.profile_photo} alt={user.name} />
                     ) : (
-                      <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
+                      <AvatarFallback className="bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 font-semibold">
+                        {user?.name?.[0]?.toUpperCase()}
+                      </AvatarFallback>
                     )}
                   </Avatar>
                 </motion.button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>
-                  <p className="font-bold">Hi, {user?.name}</p>
+              <DropdownMenuContent align="end" className="w-64 p-2">
+                <DropdownMenuLabel className="px-3 py-2">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-8 w-8">
+                      {user?.profile_photo ? (
+                        <AvatarImage src={user.profile_photo} alt={user.name} />
+                      ) : (
+                        <AvatarFallback className="bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 text-sm">
+                          {user?.name?.[0]?.toUpperCase()}
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
+                    <div>
+                      <p className="font-semibold text-sm">{user?.name}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
+                    </div>
+                  </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  asChild
-                  className="cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900 transition-colors rounded-md"
-                >
-                  <Link to="/dashboard">Dashboard</Link>
+                <DropdownMenuItem asChild>
+                  <Link to="/dashboard" className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-md">
+                    <User className="w-4 h-4" />
+                    Dashboard
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  asChild
-                  className="cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900 transition-colors rounded-md"
-                >
-                  <Link to="/profile">Profile</Link>
+                <DropdownMenuItem asChild>
+                  <Link to="/profile" className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-md">
+                    <Settings className="w-4 h-4" />
+                    Profile
+                  </Link>
                 </DropdownMenuItem>
                 {isAdmin && (
-                  <DropdownMenuItem
-                    asChild
-                    className="cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900 transition-colors rounded-md"
-                  >
-                    <Link to="/admin">Admin Panel</Link>
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin" className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-md">
+                      <Shield className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
+                      <span className="text-yellow-600 dark:text-yellow-400 font-medium">Admin Panel</span>
+                    </Link>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => {
-                    fnLogOut().then(() => {
-                      fetchUser();
-                      navigate("/");
-                    });
-                  }}
-                  className="text-red-500 focus:text-red-500 cursor-pointer hover:bg-red-100 dark:hover:bg-red-900 transition-colors rounded-md"
+                  onClick={handleLogout}
+                  disabled={loading}
+                  className="flex items-center gap-2 text-red-600 dark:text-red-400 focus:text-red-600 dark:focus:text-red-400 cursor-pointer px-3 py-2 rounded-md"
                 >
-                  Sign Out
+                  {loading ? (
+                    <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <LogOut className="w-4 h-4" />
+                  )}
+                  {loading ? "Signing out..." : "Sign Out"}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
-
-          {/* Theme toggle */}
           <motion.button
             type="button"
             aria-label="Toggle theme"
             onClick={() => setTheme(isDark ? "light" : "dark")}
-            className="inline-flex items-center justify-center h-9 w-9 rounded-full border border-neutral-200 dark:border-neutral-700 hover:scale-105 transition"
+            className="inline-flex items-center justify-center h-10 w-10 rounded-full border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <motion.div
               key={theme}
               initial={{ rotate: -90, opacity: 0 }}
               animate={{ rotate: 0, opacity: 1 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              {isDark ? <Sun size={18} /> : <Moon size={18} />}
+              {isDark ? (
+                <Sun size={18} className="text-yellow-500" />
+              ) : (
+                <Moon size={18} className="text-neutral-600" />
+              )}
             </motion.div>
           </motion.button>
         </div>
-
-        {/* Mobile Hamburger */}
-        <button
-          className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition"
+        <motion.button
+          className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
           onClick={() => setMenuOpen((prev) => !prev)}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          {menuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
+          <motion.div
+            animate={{ rotate: menuOpen ? 90 : 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </motion.div>
+        </motion.button>
       </div>
-
-      {/* Mobile Menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="md:hidden bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800 px-6 py-4 space-y-4"
+            className="md:hidden bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800 px-6 py-6 space-y-4"
           >
-            <a
-              href="#features"
-              className="block hover:text-yellow-600 dark:hover:text-yellow-400 font-medium transition-transform hover:scale-105"
-              onClick={() => setMenuOpen(false)}
-            >
-              Features
-            </a>
-            <a
-              href="#faq"
-              className="block hover:text-yellow-600 dark:hover:text-yellow-400 font-medium transition-transform hover:scale-105"
-              onClick={() => setMenuOpen(false)}
-            >
-              FAQ
-            </a>
-
             {!isAuthenticated ? (
               <>
-                <Link
-                  to="/auth/login"
-                  className="block hover:text-yellow-600 dark:hover:text-yellow-400 transition-transform hover:scale-105"
-                  onClick={() => setMenuOpen(false)}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 }}
                 >
-                  Login
-                </Link>
-                <Link to="/auth/signup" onClick={() => setMenuOpen(false)}>
-                  <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white rounded-full">
-                    Sign Up
-                  </Button>
-                </Link>
+                  <Link
+                    to="/auth/login"
+                    className="block hover:text-yellow-600 dark:hover:text-yellow-400 font-medium transition-colors py-2"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Login
+                  </Link>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <Link to="/auth/signup" onClick={() => setMenuOpen(false)}>
+                    <Button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white rounded-full shadow-md">
+                      Sign Up
+                    </Button>
+                  </Link>
+                </motion.div>
               </>
             ) : (
-              <div className="space-y-2 border-t border-neutral-200 dark:border-neutral-700 pt-4">
-                <p className="font-medium text-neutral-700 dark:text-neutral-300">
-                  {user?.name}
-                </p>
+              <motion.div
+                className="space-y-3 border-t border-neutral-200 dark:border-neutral-700 pt-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.1 }}
+              >
+                <div className="flex items-center gap-3 pb-3">
+                  <Avatar className="h-10 w-10">
+                    {user?.profile_photo ? (
+                      <AvatarImage src={user.profile_photo} alt={user.name} />
+                    ) : (
+                      <AvatarFallback className="bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300">
+                        {user?.name?.[0]?.toUpperCase()}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+                  <div>
+                    <p className="font-semibold text-neutral-900 dark:text-neutral-100">{user?.name}</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">{user?.email}</p>
+                  </div>
+                </div>
+
                 <Link
                   to="/dashboard"
-                  className="block hover:text-yellow-600 dark:hover:text-yellow-400 transition-transform hover:scale-105"
+                  className="flex items-center gap-3 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors py-2 font-medium"
                   onClick={() => setMenuOpen(false)}
                 >
+                  <User className="w-4 h-4" />
                   Dashboard
                 </Link>
                 <Link
                   to="/profile"
-                  className="block hover:text-yellow-600 dark:hover:text-yellow-400 transition-transform hover:scale-105"
+                  className="flex items-center gap-3 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors py-2 font-medium"
                   onClick={() => setMenuOpen(false)}
                 >
+                  <Settings className="w-4 h-4" />
                   Profile
                 </Link>
 
-                {/* ✅ Added Admin Panel for mobile */}
                 {isAdmin && (
                   <Link
                     to="/admin"
-                    className="block hover:text-yellow-600 dark:hover:text-yellow-400 transition-transform hover:scale-105"
+                    className="flex items-center gap-3 hover:text-yellow-600 dark:hover:text-yellow-400 transition-colors py-2 font-medium text-yellow-600 dark:text-yellow-400"
                     onClick={() => setMenuOpen(false)}
                   >
+                    <Shield className="w-4 h-4" />
                     Admin Panel
                   </Link>
                 )}
 
                 <button
-                  onClick={() => {
-                    fnLogOut().then(() => {
-                      fetchUser();
-                      navigate("/");
-                      setMenuOpen(false);
-                    });
-                  }}
-                  className="block text-red-500 hover:text-red-600 transition-colors"
+                  onClick={handleLogout}
+                  disabled={loading}
+                  className="flex items-center gap-3 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors py-2 font-medium disabled:opacity-50"
                 >
-                  Sign Out
+                  {loading ? (
+                    <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <LogOut className="w-4 h-4" />
+                  )}
+                  {loading ? "Signing out..." : "Sign Out"}
                 </button>
-              </div>
+              </motion.div>
             )}
 
-            {/* Theme toggle */}
+            {/* Enhanced Mobile Theme toggle */}
             <motion.button
               type="button"
               aria-label="Toggle theme"
               onClick={() => setTheme(isDark ? "light" : "dark")}
-              className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-md border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition w-full justify-center"
+              className="flex items-center justify-center gap-3 px-4 py-3 rounded-lg border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all w-full font-medium"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
             >
-              {isDark ? <Sun size={18} /> : <Moon size={18} />}
-              <span>{isDark ? "Light Mode" : "Dark Mode"}</span>
+              <motion.div
+                key={theme}
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                {isDark ? (
+                  <Sun size={18} className="text-yellow-500" />
+                ) : (
+                  <Moon size={18} className="text-neutral-600" />
+                )}
+              </motion.div>
+              <span>{isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}</span>
             </motion.button>
           </motion.div>
         )}
