@@ -63,7 +63,7 @@ function Subject() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-8">
       <h1 className="text-3xl font-bold mb-7 text-yellow-600 dark:text-yellow-400">
-        {subject.name}
+        <span>{subject.icon}</span>{subject.name}
       </h1>
 
       {/* Progress Bar */}
