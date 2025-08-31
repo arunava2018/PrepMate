@@ -5,6 +5,7 @@ import { getSubjectById } from "@/db/apiSubjects";
 import { fetchSubtopics } from "@/db/apiSubtopic";
 import { fetchQuestions } from "@/db/apiQuestion";
 import Loader from "@/components/Loader";
+
 import {
   Accordion,
   AccordionItem,
@@ -22,12 +23,13 @@ function Subject() {
   const [questions, setQuestions] = useState({});
   const [completed, setCompleted] = useState(new Set());
 
-  const { data, loading, fn: fnSubjects } = useFetch(getSubjectById);
+  // ✅ only one useFetch for subject by ID
+  const { data: subjectData, loading, error, fn: fetchSubject } = useFetch(getSubjectById);
 
   // get subject by id
   useEffect(() => {
-    fnSubjects(id).then((res) => {
-      setSubject(res);
+    fetchSubject(id).then((res) => {
+      setSubject(res || null);
     });
   }, [id]);
 
@@ -92,7 +94,7 @@ function Subject() {
                         {q.question_text}
                       </p>
 
-                      {/* Answer rendered as markdown with table support */}
+                      {/* Answer rendered as markdown */}
                       <ReactMarkdown
                         components={{
                           p: ({ node, ...props }) => (
@@ -136,35 +138,6 @@ function Subject() {
                                 <code {...props} />
                               </pre>
                             ),
-                          // ✅ Table support added
-                          table: ({ node, ...props }) => (
-                            <table className="w-full border border-neutral-300 dark:border-neutral-700 my-4 text-sm text-left">
-                              {props.children}
-                            </table>
-                          ),
-                          thead: ({ node, ...props }) => (
-                            <thead className="bg-neutral-100 dark:bg-neutral-800">
-                              {props.children}
-                            </thead>
-                          ),
-                          tbody: ({ node, ...props }) => <tbody {...props} />,
-                          tr: ({ node, ...props }) => (
-                            <tr className="border-b border-neutral-300 dark:border-neutral-700">
-                              {props.children}
-                            </tr>
-                          ),
-                          th: ({ node, ...props }) => (
-                            <th
-                              className="px-3 py-2 font-semibold text-neutral-800 dark:text-neutral-200"
-                              {...props}
-                            />
-                          ),
-                          td: ({ node, ...props }) => (
-                            <td
-                              className="px-3 py-2 text-neutral-700 dark:text-neutral-300"
-                              {...props}
-                            />
-                          ),
                         }}
                       >
                         {q.answer_text}
