@@ -227,7 +227,7 @@ export default function QuestionItem({
                   ),
                   img: ({ node, ...props }) => (
                     <img
-                      className="max-w-full h-auto rounded-lg my-3 sm:my-4 mx-auto shadow-sm"
+                      className="w-xl h-auto rounded-lg my-3 sm:my-4 mx-auto shadow-sm"
                       {...props}
                     />
                   ),
