@@ -60,13 +60,13 @@ function DashboardInfo() {
         <Card className="relative bg-white dark:bg-gray-800 border border-yellow-200 dark:border-yellow-800/50 rounded-xl shadow-lg overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 dark:from-yellow-900/20 to-transparent" />
           
-          <CardContent className="relative z-10 p-6 text-center">
-            <div className="flex items-center justify-center gap-6">
+          <CardContent className="relative z-10 p-6">
+            <div className="flex flex-col sm:flex-row items-center gap-4">
               <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg shrink-0">
                 <UserPlus className="w-6 h-6 text-white" />
               </div>
 
-              <div className="flex-1 text-left">
+              <div className="flex-1 text-center sm:text-left">
                 <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-1">
                   Track Your Learning Progress
                 </h3>
@@ -74,11 +74,11 @@ function DashboardInfo() {
                   Create an account to access detailed analytics and track your progress across subjects.
                 </p>
                 
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                   <Button
                     onClick={() => navigate('/auth/signup')}
                     size="sm"
-                    className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white font-semibold px-4 py-2 rounded-lg text-xs cursor-pointer"
+                    className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white font-semibold px-4 py-2 rounded-lg text-xs"
                   >
                     <UserPlus className="w-3 h-3 mr-1" />
                     Sign Up
@@ -88,7 +88,7 @@ function DashboardInfo() {
                     onClick={() => navigate('/auth/login')}
                     variant="outline"
                     size="sm"
-                    className="border border-yellow-400 hover:border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 font-semibold px-4 py-2 rounded-lg text-xs cursor-pointer"
+                    className="border border-yellow-400 hover:border-yellow-500 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 font-semibold px-4 py-2 rounded-lg text-xs"
                   >
                     <LogIn className="w-3 h-3 mr-1" />
                     Sign In
@@ -96,7 +96,7 @@ function DashboardInfo() {
                 </div>
               </div>
 
-              <div className="hidden sm:flex items-center gap-4 text-center shrink-0">
+              <div className="hidden md:flex items-center gap-6 text-center shrink-0">
                 <div>
                   <p className="text-lg font-bold text-yellow-600">10k+</p>
                   <p className="text-xs text-gray-500">Questions</p>
@@ -234,12 +234,13 @@ function DashboardInfo() {
         ))}
       </div>
 
-      {/* Compact Achievement Section */}
+      {/* Mobile-Responsive Achievement Section */}
       <Card className="bg-gradient-to-br from-yellow-100/70 to-orange-50/70 dark:from-yellow-900/20 dark:to-orange-900/15 backdrop-blur-sm border border-yellow-200/50 dark:border-yellow-800/30 rounded-xl shadow-lg">
         <CardContent className="p-4">
-          <div className="flex items-center justify-between">
+          <div className="space-y-4">
+            {/* Header - Always visible */}
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500">
+              <div className="p-2 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 shrink-0">
                 <Award className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -248,19 +249,20 @@ function DashboardInfo() {
               </div>
             </div>
             
-            <div className="flex items-center gap-6 text-center">
-              <div>
-                <p className="text-lg font-bold text-yellow-600 dark:text-yellow-400">
+            {/* Stats - Responsive Layout */}
+            <div className="grid grid-cols-3 gap-4 sm:gap-6">
+              <div className="text-center">
+                <p className="text-lg sm:text-xl font-bold text-yellow-600 dark:text-yellow-400">
                   {Math.round((completedQuestions / totalQuestions) * 100) || 0}%
                 </p>
                 <p className="text-xs text-gray-600 dark:text-gray-400">Mastered</p>
               </div>
-              <div>
-                <p className="text-lg font-bold text-green-600 dark:text-green-400">{completedQuestions}</p>
+              <div className="text-center">
+                <p className="text-lg sm:text-xl font-bold text-green-600 dark:text-green-400">{completedQuestions}</p>
                 <p className="text-xs text-gray-600 dark:text-gray-400">Completed</p>
               </div>
-              <div>
-                <p className="text-lg font-bold text-blue-600 dark:text-blue-400">{totalQuestions - completedQuestions}</p>
+              <div className="text-center">
+                <p className="text-lg sm:text-xl font-bold text-blue-600 dark:text-blue-400">{totalQuestions - completedQuestions}</p>
                 <p className="text-xs text-gray-600 dark:text-gray-400">Remaining</p>
               </div>
             </div>
