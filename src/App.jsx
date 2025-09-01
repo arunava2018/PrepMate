@@ -16,6 +16,7 @@ import RequireAdmin from "./components/RequireAdmin";
 import Addsubject from "./pages/Addsubject";
 import Addsubtopic from "./pages/Addsubtopic";
 import Features from "./components/Feature";
+import UpdateQuestion from "./pages/UpdateQuestion";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       { path: "/admin/addQuestion", element: <RequireAdmin><Addquestion/></RequireAdmin>},
       { path: "/admin/addSubject", element: <RequireAdmin><Addsubject/></RequireAdmin>},
       { path: "/admin/addSubtopic", element: <RequireAdmin><Addsubtopic/></RequireAdmin>},
+      { path: "/admin/updateQuestion", element: <RequireAdmin><UpdateQuestion/></RequireAdmin>},
       
     ],
   },

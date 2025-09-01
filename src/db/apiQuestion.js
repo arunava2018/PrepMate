@@ -35,5 +35,24 @@ export async function fetchQuestions(subtopicId) {
     .order("created_at", { ascending: true });
 
   if (error) throw new Error(error.message);
+//   console.log(data);
+  
+  return data;
+}
+
+// Update question
+export async function updateQuestion({ questionId, question_text, answer_text }) {
+  const { data, error } = await supabase
+    .from("questions")
+    .update({
+      question_text,
+      answer_text,
+      updated_at: new Date(),
+    })
+    .eq("id", questionId)
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
   return data;
 }
