@@ -9,6 +9,7 @@ import { getIcon } from "@/utils/iconmap";
 import { motion } from "framer-motion";
 import { UrlState } from "@/context";
 import DashboardInfo from "@/components/DashboardInfo";
+import { TypeAnimation } from "react-type-animation";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -57,9 +58,8 @@ const Dashboard = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800 dark:text-gray-100">
-        Dashboard
-      </h1>
+      <h1 className="text-3xl font-bold md:mb-1 mb-5">Dashboard</h1>
+
       <DashboardInfo />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">

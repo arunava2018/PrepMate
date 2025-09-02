@@ -1,13 +1,24 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { getSubjects } from "@/db/apiSubjects";
 import { fetchSubtopics } from "@/db/apiSubtopic";
-import { fetchQuestions } from "@/db/apiQuestion";
+import { deleteQuestion, fetchQuestions } from "@/db/apiQuestion";
 import Loader from "@/components/Loader";
-import UpdateQuestionModal from "@/components/UpdateQuestionModal";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronDown, BookOpen, Edit3, Search, Filter, FileText } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
-export default function UpdateQuestionPage() {
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChevronDown, BookOpen, Edit3, Search, Filter, FileText,Trash2 } from "lucide-react";
+
+export default function DeletQuestionPage() {
   const [subjects, setSubjects] = useState([]);
   const [subtopics, setSubtopics] = useState([]);
   const [questions, setQuestions] = useState([]);
@@ -17,7 +28,7 @@ export default function UpdateQuestionPage() {
 
   const [loading, setLoading] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [alert, setAlert] = useState(false);
 
   // Load subjects
   useEffect(() => {
@@ -55,16 +66,29 @@ export default function UpdateQuestionPage() {
       .finally(() => setLoading(false));
   }, [selectedSubtopic]);
 
+  // Delete question on chane of alert
+  useEffect(() => {
+    if(alert){
+        // console.log("Deleting question:", selectedQuestion);
+        deleteQuestion(selectedQuestion.id)
+        .then(() => {
+            setQuestions((prev) => prev.filter((q) => q.id !== selectedQuestion.id));
+            setSelectedQuestion(null);
+            setAlert(false);
+        })
+    }
+  },[alert])
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">
-            Update Questions
+            Delete Questions
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Select a subject and subtopic to view and edit questions
+            Select a subject and subtopic to view and Delete questions
           </p>
         </div>
 
@@ -176,12 +200,11 @@ export default function UpdateQuestionPage() {
                     <button
                       onClick={() => {
                         setSelectedQuestion(q);
-                        setIsModalOpen(true);
                       }}
-                      className="flex items-center gap-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium transition-all transform hover:scale-105 shadow-md hover:shadow-lg"
+                      className="flex items-center gap-1 px-2 py-2 cursor-pointer bg-red-500 hover:bg-red-600 text-white rounded-lg md:font-medium transition-all transform hover:scale-105 shadow-md hover:shadow-lg text-sm"
                     >
-                      <Edit3 className="w-4 h-4" />
-                      Edit
+                      <Trash2 className="w-3 h-3" />
+                      Delete
                     </button>
                   </div>
                 ))}
@@ -221,14 +244,39 @@ export default function UpdateQuestionPage() {
             </CardContent>
           </Card>
         )}
-      </div>
 
-      {/* Modal */}
-      <UpdateQuestionModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        question={selectedQuestion}
-      />
+        {/* Alert Dialog box for Deletion Confirmation */}
+        <AlertDialog open={!!selectedQuestion}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+                <AlertDialogTitle className="text-xl font-bold text-gray-800 dark:text-gray-100">
+                    Confirm Deletion
+                </AlertDialogTitle>
+                <AlertDialogDescription className="mt-2 text-gray-600 dark:text-gray-400">
+                    Are you sure you want to delete this question? This action cannot be undone. 
+                    <span className="mt-2 font-semibold text-gray-800 dark:text-gray-200">
+                        "{selectedQuestion?.question_text}"
+                    </span>
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+                <AlertDialogCancel 
+                  className="px-4 py-2 cursor-pointer bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"    
+                  onClick={() => setSelectedQuestion(null)}
+                >
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction 
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg cursor-pointer hover:bg-red-600 transition-all"
+                  onClick={() => setAlert(true)}
+                >
+                  Delete
+                </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>       
+        
+      </div>
     </div>
   );
 }

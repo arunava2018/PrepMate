@@ -56,3 +56,10 @@ export async function updateQuestion({ questionId, question_text, answer_text })
   if (error) throw new Error(error.message);
   return data;
 }
+
+// Delete question
+export async function deleteQuestion(questionId) {
+  const { data, error } = await supabase.from("questions").delete().eq("id", questionId);
+  if (error) throw new Error(error.message);
+  return data;
+}

@@ -17,6 +17,7 @@ import Addsubject from "./pages/Addsubject";
 import Addsubtopic from "./pages/Addsubtopic";
 import Features from "./components/Feature";
 import UpdateQuestion from "./pages/UpdateQuestion";
+import DeletQuestionPage from "./pages/DeleteQuestion";
 
 const router = createBrowserRouter([
   {
@@ -25,16 +26,65 @@ const router = createBrowserRouter([
       { path: "/", element: <Landing /> },
       { path: "/auth/:mode", element: <Auth /> },
       { path: "/dashboard", element: <Dashboard /> },
-      { path: "/features", element: <Features/> },
+      { path: "/features", element: <Features /> },
       { path: "/add-question", element: <Addquestion /> },
-      { path: "/subject/:slug/:id", element: <RequireAuth><Subject /></RequireAuth> },
-      { path: "/profile", element: <Profile/>},
-      { path: "/admin", element: <RequireAdmin><Admin/></RequireAdmin>},
-      { path: "/admin/addQuestion", element: <RequireAdmin><Addquestion/></RequireAdmin>},
-      { path: "/admin/addSubject", element: <RequireAdmin><Addsubject/></RequireAdmin>},
-      { path: "/admin/addSubtopic", element: <RequireAdmin><Addsubtopic/></RequireAdmin>},
-      { path: "/admin/updateQuestion", element: <RequireAdmin><UpdateQuestion/></RequireAdmin>},
-      
+      {
+        path: "/subject/:slug/:id",
+        element: (
+          <RequireAuth>
+            <Subject />
+          </RequireAuth>
+        ),
+      },
+      { path: "/profile", element: <Profile /> },
+      {
+        path: "/admin",
+        element: (
+          <RequireAdmin>
+            <Admin />
+          </RequireAdmin>
+        ),
+      },
+      {
+        path: "/admin/addQuestion",
+        element: (
+          <RequireAdmin>
+            <Addquestion />
+          </RequireAdmin>
+        ),
+      },
+      {
+        path: "/admin/addSubject",
+        element: (
+          <RequireAdmin>
+            <Addsubject />
+          </RequireAdmin>
+        ),
+      },
+      {
+        path: "/admin/addSubtopic",
+        element: (
+          <RequireAdmin>
+            <Addsubtopic />
+          </RequireAdmin>
+        ),
+      },
+      {
+        path: "/admin/updateQuestion",
+        element: (
+          <RequireAdmin>
+            <UpdateQuestion />
+          </RequireAdmin>
+        ),
+      },
+      {
+        path: "/admin/deleteQuestion",
+        element: (
+          <RequireAdmin>
+            <DeletQuestionPage />
+          </RequireAdmin>
+        ),
+      },
     ],
   },
 ]);

@@ -233,42 +233,6 @@ function DashboardInfo() {
           </Card>
         ))}
       </div>
-
-      {/* Mobile-Responsive Achievement Section */}
-      <Card className="bg-gradient-to-br from-yellow-100/70 to-orange-50/70 dark:from-yellow-900/20 dark:to-orange-900/15 backdrop-blur-sm border border-yellow-200/50 dark:border-yellow-800/30 rounded-xl shadow-lg">
-        <CardContent className="p-4">
-          <div className="space-y-4">
-            {/* Header - Always visible */}
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-gradient-to-r from-yellow-400 to-orange-500 shrink-0">
-                <Award className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <CardTitle className="text-gray-800 dark:text-gray-100 text-lg">Learning Achievement</CardTitle>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Your progress milestone</p>
-              </div>
-            </div>
-            
-            {/* Stats - Responsive Layout */}
-            <div className="grid grid-cols-3 gap-4 sm:gap-6">
-              <div className="text-center">
-                <p className="text-lg sm:text-xl font-bold text-yellow-600 dark:text-yellow-400">
-                  {Math.round((completedQuestions / totalQuestions) * 100) || 0}%
-                </p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Mastered</p>
-              </div>
-              <div className="text-center">
-                <p className="text-lg sm:text-xl font-bold text-green-600 dark:text-green-400">{completedQuestions}</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Completed</p>
-              </div>
-              <div className="text-center">
-                <p className="text-lg sm:text-xl font-bold text-blue-600 dark:text-blue-400">{totalQuestions - completedQuestions}</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Remaining</p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
