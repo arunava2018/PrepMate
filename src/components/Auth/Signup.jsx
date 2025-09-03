@@ -13,9 +13,9 @@ import { BeatLoader } from "react-spinners";
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import { signup } from "../db/apiAuth";
-import { UrlState } from "../context";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { signup } from "@/db/apiAuth";
+import { UrlState } from "@/context";
 
 // ✅ Validation Schema including confirmPassword
 const signupSchema = Yup.object().shape({

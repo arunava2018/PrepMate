@@ -1,7 +1,7 @@
 import { useLocation, useSearchParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Login from "@/components/Login";
-import Signup from "@/components/Signup";
+import Login from "@/components/Auth/Login";
+import Signup from "@/components/Auth/Signup";
 
 export default function Auth() {
   const location = useLocation();

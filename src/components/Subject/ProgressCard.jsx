@@ -1,4 +1,3 @@
-// src/components/ProgressCard.jsx
 
 import { motion, AnimatePresence } from "framer-motion";
 

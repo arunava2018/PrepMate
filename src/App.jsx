@@ -6,22 +6,32 @@ import Auth from "./pages/Auth";
 import Subject from "./pages/Subject";
 import { ThemeProvider } from "./theme/Themeprovides";
 import Dashboard from "./pages/Dashboard";
-import Addquestion from "./pages/Addquestion";
+import Addquestion from "./components/Admin Control/Addquestion";
 import UrlProvider from "./context";
 import Profile from "./pages/Profile";
-// import GuestRoute from "./components/GuestRoute";
-import RequireAuth from "./components/RequireAuth";
+import RequireAuth from "./components/Route Control/RequireAuth";
 import Admin from "./pages/Admin";
-import RequireAdmin from "./components/RequireAdmin";
-import Addsubject from "./pages/Addsubject";
-import Addsubtopic from "./pages/Addsubtopic";
-import Features from "./components/Feature";
-import UpdateQuestion from "./pages/UpdateQuestion";
-import DeletQuestionPage from "./pages/DeleteQuestion";
+import RequireAdmin from "./components/Route Control/RequireAdmin";
+import Addsubject from "./components/Admin Control/Addsubject";
+import Addsubtopic from "./components/Admin Control/Addsubtopic";
+import Features from "./components/Landing Page/Feature";
+import UpdateQuestion from "./components/Admin Control/UpdateQuestion";
+import DeletQuestionPage from "./components/Admin Control/DeleteQuestion";
+import InterviewExperience from "./pages/InterviewExperience";
+import ViewInterviewExperience from "./pages/ViewInterviewExperience";
+import ScrollToTop from "./ScrollToTop";
+
+// Wrap AppLayout with ScrollToTop so it runs on every route change
+const LayoutWithScroll = () => (
+  <>
+    <ScrollToTop />
+    <AppLayout />
+  </>
+);
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout />,
+    element: <LayoutWithScroll />,
     children: [
       { path: "/", element: <Landing /> },
       { path: "/auth/:mode", element: <Auth /> },
@@ -85,6 +95,22 @@ const router = createBrowserRouter([
           </RequireAdmin>
         ),
       },
+      {
+        path: "/share-experience",
+        element: (
+          <RequireAuth>
+            <InterviewExperience />
+          </RequireAuth>
+        ),
+      },
+      {
+        path: "/view-interview-experiences",
+        element: (
+          <RequireAuth>
+            <ViewInterviewExperience />
+          </RequireAuth>
+        ),
+      },
     ],
   },
 ]);
@@ -93,7 +119,6 @@ function App() {
   return (
     <UrlProvider>
       <ThemeProvider>
-        {/* ✅ Wrap your app here */}
         <RouterProvider router={router} />
       </ThemeProvider>
     </UrlProvider>

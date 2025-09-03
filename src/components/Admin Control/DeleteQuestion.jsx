@@ -12,11 +12,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChevronDown, BookOpen, Edit3, Search, Filter, FileText,Trash2 } from "lucide-react";
+import { ChevronDown, BookOpen,Search, Filter, FileText,Trash2 } from "lucide-react";
 
 export default function DeletQuestionPage() {
   const [subjects, setSubjects] = useState([]);

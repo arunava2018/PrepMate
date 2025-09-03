@@ -3,7 +3,7 @@ import { getSubjects } from "@/db/apiSubjects";
 import { fetchSubtopics } from "@/db/apiSubtopic";
 import { fetchQuestions } from "@/db/apiQuestion";
 import Loader from "@/components/Loader";
-import UpdateQuestionModal from "@/components/UpdateQuestionModal";
+import UpdateQuestionModal from "@/components/Admin Control/UpdateQuestionModal";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronDown, BookOpen, Edit3, Search, Filter, FileText } from "lucide-react";
 

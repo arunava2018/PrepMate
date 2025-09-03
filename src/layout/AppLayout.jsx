@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet, Link } from "react-router-dom";
 import { Github, Linkedin, Twitter } from "lucide-react";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/layout/Navbar";
 
 const AppLayout = () => {
   return (

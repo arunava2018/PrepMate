@@ -60,7 +60,7 @@ export default function UpdateQuestionModal({ isOpen, onClose, question }) {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="w-full max-w-2xl bg-white dark:bg-gray-900 rounded-3xl shadow-2xl overflow-hidden"
+              className="w-full max-w-2xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
             >
               {/* Header */}
               <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/10 px-6 py-4 border-b border-yellow-200 dark:border-yellow-800/30">
@@ -88,7 +88,7 @@ export default function UpdateQuestionModal({ isOpen, onClose, question }) {
               </div>
 
               {/* Content */}
-              <div className="p-6">
+              <div className="p-6 overflow-y-auto flex-1">
                 <form 
                   className="space-y-6" 
                   onSubmit={(e) => { 
