@@ -98,7 +98,7 @@ export const useExperienceForm = () => {
 
     try {
       const dataToSave = { ...formData, experience };
-      console.log("Submitting:", dataToSave);
+      // console.log("Submitting:", dataToSave);
 
       await addInterviewExperience({
         userId: user.id,

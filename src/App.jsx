@@ -20,8 +20,8 @@ import DeletQuestionPage from "./components/Admin Control/DeleteQuestion";
 import InterviewExperience from "./pages/InterviewExperience";
 import ViewInterviewExperience from "./pages/ViewInterviewExperience";
 import ScrollToTop from "./ScrollToTop";
+import ApproveExperiences from "./components/Admin Control/Interview Experiences Approval/ApproveExperiences";
 
-// Wrap AppLayout with ScrollToTop so it runs on every route change
 const LayoutWithScroll = () => (
   <>
     <ScrollToTop />
@@ -111,6 +111,14 @@ const router = createBrowserRouter([
           </RequireAuth>
         ),
       },
+      {
+        path: "/admin/approveExperiences",
+        element: (
+          <RequireAdmin>
+            <ApproveExperiences/>
+          </RequireAdmin>
+        ),
+      }
     ],
   },
 ]);

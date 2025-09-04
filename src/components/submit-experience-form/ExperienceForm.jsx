@@ -6,6 +6,9 @@ import FormHeader from "./FormHeader";
 import MarkdownEditor from "./MarkdownEditor";
 import { useExperienceForm } from "./useExperienceForm";
 
+// Icons
+import { User, Building2, Briefcase, Linkedin, Github, FileText } from "lucide-react";
+
 const ExperienceForm = () => {
   const editorRef = useRef(null);
 
@@ -38,13 +41,16 @@ const ExperienceForm = () => {
 
         <form
           onSubmit={(e) => handleSubmit(e, editorRef)}
-          className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4"
+          className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-6"
         >
           <FormHeader />
 
           {/* Name + Company */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
+                <User className="w-4 h-4 text-yellow-500" /> Your Name
+              </label>
               <input
                 type="text"
                 name="username"
@@ -67,6 +73,9 @@ const ExperienceForm = () => {
             </div>
 
             <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
+                <Building2 className="w-4 h-4 text-blue-500" /> Company
+              </label>
               <input
                 type="text"
                 name="company"
@@ -92,6 +101,9 @@ const ExperienceForm = () => {
           {/* Offer Type + Opportunity Type */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
+                <Briefcase className="w-4 h-4 text-green-500" /> Offer Type
+              </label>
               <select
                 name="offer_type"
                 value={formData.offer_type}
@@ -100,9 +112,7 @@ const ExperienceForm = () => {
                   border-gray-300 dark:border-gray-600
                   bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
-                <option value="">
-                  Select Offer Type *
-                </option>
+                <option value="">Select Offer Type *</option>
                 {offerTypes.map((offer) => (
                   <option key={offer.value} value={offer.value}>
                     {offer.label}
@@ -112,6 +122,9 @@ const ExperienceForm = () => {
             </div>
 
             <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
+                <Briefcase className="w-4 h-4 text-purple-500" /> Opportunity Type
+              </label>
               <select
                 name="opportunity_type"
                 value={formData.opportunity_type}
@@ -120,9 +133,7 @@ const ExperienceForm = () => {
                   border-gray-300 dark:border-gray-600
                   bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
-                <option value="">
-                  Select Opportunity Type *
-                </option>
+                <option value="">Select Opportunity Type *</option>
                 {opportunityTypes.map((type) => (
                   <option key={type.value} value={type.value}>
                     {type.label}
@@ -134,12 +145,15 @@ const ExperienceForm = () => {
 
           {/* Position */}
           <div>
+            <label className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
+              <Briefcase className="w-4 h-4 text-orange-500" /> Position
+            </label>
             <input
               type="text"
               name="position"
               value={formData.position}
               onChange={handleChange}
-              placeholder="Position e.g. Software Engineer Intern, Data Analyst, SDE-1 *"
+              placeholder="e.g. Software Engineer Intern, Data Analyst, SDE-1 *"
               className={`w-full p-3 border rounded-lg outline-none
                 ${
                   errors.position
@@ -158,6 +172,9 @@ const ExperienceForm = () => {
           {/* LinkedIn + GitHub */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
+                <Linkedin className="w-4 h-4 text-blue-600" /> LinkedIn
+              </label>
               <input
                 type="url"
                 name="linkedin"
@@ -179,15 +196,20 @@ const ExperienceForm = () => {
               )}
             </div>
 
-            <input
-              type="url"
-              name="github"
-              value={formData.github}
-              onChange={handleChange}
-              placeholder="GitHub Profile (optional)"
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg outline-none
-                bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            />
+            <div>
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
+                <Github className="w-4 h-4 text-gray-400" /> GitHub
+              </label>
+              <input
+                type="url"
+                name="github"
+                value={formData.github}
+                onChange={handleChange}
+                placeholder="GitHub Profile (optional)"
+                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg outline-none
+                  bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+            </div>
           </div>
 
           {/* Experience Markdown Editor */}
@@ -205,6 +227,7 @@ const ExperienceForm = () => {
             className="w-full p-3 bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-400 
               text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2 cursor-pointer"
           >
+            <FileText className="w-5 h-5" />
             {isSubmitting ? "Submitting..." : "Submit Experience"}
           </Button>
         </form>

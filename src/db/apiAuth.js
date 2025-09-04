@@ -66,3 +66,16 @@ export async function signout() {
   }
   return true; // success indicator
 }
+
+export async function getUserById(id) {
+  const { data, error } = await supabase
+    .from("usersProfile")
+    .select("name")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+}

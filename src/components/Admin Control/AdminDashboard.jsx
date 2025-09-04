@@ -21,6 +21,7 @@ import {
   Database,
 } from "lucide-react";
 import Loader from "@/components/Loader";
+import path from "path";
 
 export default function AdminDashboard() {
   const { user } = UrlState();
@@ -28,16 +29,6 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(false);
 
   const cards = [
-    {
-      title: "Add Question",
-      desc: "Create new questions with subject & subtopic mapping.",
-      path: "/admin/addQuestion",
-      icon: (
-        <FilePlus className="w-6 h-6 text-yellow-500 dark:text-yellow-400" />
-      ),
-      bgColor: "bg-yellow-50 dark:bg-yellow-900/10",
-      borderColor: "hover:border-yellow-200 dark:hover:border-yellow-800",
-    },
     {
       title: "Add Subject",
       desc: "Introduce a new subject with its description.",
@@ -53,6 +44,16 @@ export default function AdminDashboard() {
       icon: <ListPlus className="w-6 h-6 text-green-500 dark:text-green-400" />,
       bgColor: "bg-green-50 dark:bg-green-900/10",
       borderColor: "hover:border-green-200 dark:hover:border-green-800",
+    },
+    {
+      title: "Add Question",
+      desc: "Create new questions with subject & subtopic mapping.",
+      path: "/admin/addQuestion",
+      icon: (
+        <FilePlus className="w-6 h-6 text-yellow-500 dark:text-yellow-400" />
+      ),
+      bgColor: "bg-yellow-50 dark:bg-yellow-900/10",
+      borderColor: "hover:border-yellow-200 dark:hover:border-yellow-800",
     },
     {
       title: "Update Question",
@@ -72,6 +73,14 @@ export default function AdminDashboard() {
       bgColor: "bg-red-50 dark:bg-red-900/10",
       borderColor: "hover:border-red-300 dark:hover:border-red-800",
     },
+    {
+      title : "Approve Interview Experiences",
+      desc: "Review and approve user-submitted interview experiences.",
+      path: "/admin/approveExperiences",
+      icon: <NotebookPen className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />,
+      bgColor: "bg-indigo-50 dark:bg-indigo-900/10",
+      borderColor: "hover:border-indigo-200 dark:hover:border-indigo-800",  
+    }
   ];
 
   const handleNavigate = (path) => {

@@ -1,4 +1,5 @@
 import supabase from "./supabase";
+
 // Add interview experience
 export async function addInterviewExperience({
   userId,
@@ -32,5 +33,69 @@ export async function addInterviewExperience({
     throw new Error(error.message || "Failed to add interview experience");
   }
 
+  return data;
+}
+
+// Fetch unpublished interview experiences
+export async function fetchUnpublishedInterviewExperiences() {
+  const { data, error } = await supabase
+    .from("interview_experiences")
+    .select(`
+      id,
+      company_name,
+      user_id,
+      content,
+      linkedin_url,
+      github_url,
+      role,
+      usersProfile ( name )
+    `)
+    .eq("is_public", false);
+
+  if (error) {
+    console.error("Error fetching unpublished experiences:", error);
+    throw new Error(error.message);
+  }
+  return data;
+}
+
+
+// Delete interview experience by id
+export async function deleteExperience(id) {
+  const { data, error } = await supabase
+    .from("interview_experiences")
+    .delete()
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error deleting experience:", error);
+    throw new Error(error.message);
+  }
+  return data;
+}
+
+// Approve interview experience by id
+export async function approveExperience(id, updatedData) {
+  // ✅ Ensure we map formData.experience → content before sending
+  const payload = {
+    ...updatedData,
+    content: updatedData.content || updatedData.experience || "", // fallback
+    is_public: true,
+  };
+  delete payload.experience; // cleanup in case form still sends `experience`
+
+  const { data, error } = await supabase
+    .from("interview_experiences")
+    .update(payload)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error approving experience:", error);
+    throw new Error(error.message);
+  }
   return data;
 }
