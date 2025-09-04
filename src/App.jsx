@@ -20,8 +20,7 @@ import DeletQuestionPage from "./components/Admin Control/DeleteQuestion";
 import InterviewExperience from "./pages/InterviewExperience";
 import ViewInterviewExperience from "./pages/ViewInterviewExperience";
 import ScrollToTop from "./ScrollToTop";
-import ApproveExperiences from "./components/Admin Control/Interview Experiences Approval/ApproveExperiences";
-
+import ApproveInterviewExperiences from "./pages/ApproveInterviewExperiences";
 const LayoutWithScroll = () => (
   <>
     <ScrollToTop />
@@ -115,7 +114,7 @@ const router = createBrowserRouter([
         path: "/admin/approveExperiences",
         element: (
           <RequireAdmin>
-            <ApproveExperiences/>
+            <ApproveInterviewExperiences/>
           </RequireAdmin>
         ),
       }

@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import useFetch from "@/hooks/useFetch";
 import { getSubjects } from "@/db/apiSubjects";
 import { fetchSubtopics } from "@/db/apiSubtopic";
 import { addQuestion } from "@/db/apiQuestion";
+import MarkdownEditor from "../submit-experience-form/MarkdownEditor";
 
 export default function AddQuestion() {
   const [form, setForm] = useState({
@@ -34,10 +34,6 @@ export default function AddQuestion() {
     }
   }, [form.subject]);
 
-  const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
   useEffect(() => {
     if (successMsg || errorMsg) {
       const timer = setTimeout(() => {
@@ -48,12 +44,16 @@ export default function AddQuestion() {
     }
   }, [successMsg, errorMsg]);
 
+  const handleChange = (e) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await addQuestion(form);
       setSuccessMsg("Question has been successfully added.");
-      setForm({ question: "", answer: "" });
+      setForm({ subject: "", subtopic: "", question: "", answer: "" });
     } catch (err) {
       setErrorMsg(err.message || "Something went wrong!");
     }
@@ -121,34 +121,24 @@ export default function AddQuestion() {
             </div>
 
             {/* Question */}
-            <div>
-              <label className="block mb-1 font-medium text-gray-800 dark:text-gray-200 text-sm sm:text-base">
-                Question
-              </label>
-              <Textarea
-                name="question"
-                value={form.question}
-                onChange={handleChange}
-                placeholder="Enter your question..."
-                rows={3}
-                className="w-full p-2 sm:p-3 text-sm sm:text-base border rounded-lg bg-gray-50 dark:bg-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-yellow-400 transition resize-none"
-              />
-            </div>
+            <MarkdownEditor
+              value={form.question}
+              onChange={(val) =>
+                setForm((prev) => ({ ...prev, question: val }))
+              }
+              error={!form.question && errorMsg ? "Question is required" : ""}
+              label="Question *"
+              placeholder={`Write the question here...\n\nExample:\nWhat is a deadlock? Explain with an example.`}
+            />
 
             {/* Answer */}
-            <div>
-              <label className="block mb-1 font-medium text-gray-800 dark:text-gray-200 text-sm sm:text-base">
-                Answer
-              </label>
-              <Textarea
-                name="answer"
-                value={form.answer}
-                onChange={handleChange}
-                placeholder="Enter the answer..."
-                rows={3}
-                className="w-full p-2 sm:p-3 text-sm sm:text-base border rounded-lg bg-gray-50 dark:bg-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-yellow-400 transition resize-none"
-              />
-            </div>
+            <MarkdownEditor
+              value={form.answer}
+              onChange={(val) => setForm((prev) => ({ ...prev, answer: val }))}
+              error={!form.answer && errorMsg ? "Answer is required" : ""}
+              label="Answer *"
+              placeholder={`Write the answer here...\n\nExample:\nA **deadlock** occurs when...`}
+            />
 
             {/* Alerts */}
             {successMsg && (

@@ -46,6 +46,8 @@ export async function fetchUnpublishedInterviewExperiences() {
       user_id,
       content,
       linkedin_url,
+      offer_type,
+      opportunity_type,
       github_url,
       role,
       usersProfile ( name )
@@ -78,14 +80,12 @@ export async function deleteExperience(id) {
 
 // Approve interview experience by id
 export async function approveExperience(id, updatedData) {
-  // ✅ Ensure we map formData.experience → content before sending
   const payload = {
     ...updatedData,
     content: updatedData.content || updatedData.experience || "", // fallback
     is_public: true,
   };
-  delete payload.experience; // cleanup in case form still sends `experience`
-
+  delete payload.experience;
   const { data, error } = await supabase
     .from("interview_experiences")
     .update(payload)
@@ -95,6 +95,19 @@ export async function approveExperience(id, updatedData) {
 
   if (error) {
     console.error("Error approving experience:", error);
+    throw new Error(error.message);
+  }
+  return data;
+}
+
+//fetch public interview experiences
+export async function fetchPublicInterviewExperiences() {
+  const { data, error } = await supabase.from("interview_experiences")
+  .select("*")
+  .eq("is_public", true)
+  .order('company_name', { ascending: true });
+  if(error){
+    console.error("Error fetching public experiences:", error);
     throw new Error(error.message);
   }
   return data;

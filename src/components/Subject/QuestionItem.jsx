@@ -6,7 +6,7 @@ import rehypeRaw from "rehype-raw";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 import hljs from "highlight.js";
-import "highlight.js/styles/github-dark.css";
+import "highlight.js/styles/tomorrow-night-bright.css";
 import "highlightjs-line-numbers.js";
 import "@/styles/hljs-line-numbers.css";
 import {

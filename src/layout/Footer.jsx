@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Twitter, Github, Linkedin } from "lucide-react";
-
+import logo from "@/assets/logo.jpg";
 export default function Footer() {
   return (
     <footer className="bg-white dark:bg-neutral-950 text-neutral-700 dark:text-gray-300 mt-10 transition-colors">
@@ -8,7 +8,8 @@ export default function Footer() {
         {/* Brand */}
         <div>
           <h2 className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 tracking-wide">
-            PrepMate
+            <img src={logo} alt="PrepMate Logo" className="h-8 w-8 rounded-full" /> 
+              PrepMate
           </h2>
           <p className="mt-3 text-sm text-neutral-600 dark:text-gray-400 leading-relaxed">
             Your personal Q&A bank for Computer Science interview prep.  

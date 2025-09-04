@@ -7,7 +7,14 @@ import MarkdownEditor from "./MarkdownEditor";
 import { useExperienceForm } from "./useExperienceForm";
 
 // Icons
-import { User, Building2, Briefcase, Linkedin, Github, FileText } from "lucide-react";
+import {
+  User,
+  Building2,
+  Briefcase,
+  Linkedin,
+  Github,
+  FileText,
+} from "lucide-react";
 
 const ExperienceForm = () => {
   const editorRef = useRef(null);
@@ -123,7 +130,8 @@ const ExperienceForm = () => {
 
             <div>
               <label className="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
-                <Briefcase className="w-4 h-4 text-purple-500" /> Opportunity Type
+                <Briefcase className="w-4 h-4 text-purple-500" /> Opportunity
+                Type
               </label>
               <select
                 name="opportunity_type"
@@ -218,6 +226,16 @@ const ExperienceForm = () => {
             value={experience}
             onChange={handleExperienceChange}
             error={errors.experience}
+            label="Interview Experience *"
+            placeholder={`Write your interview experience...
+
+Example:
+1. Aptitude test
+2. Coding challenge  
+3. Technical and HR rounds
+4. Final decision
+
+Use **bold** and *italic* for emphasis!`}
           />
 
           {/* Submit Button */}

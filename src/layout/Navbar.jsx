@@ -10,6 +10,7 @@ import { UrlState } from "../context";
 import { signout } from "@/db/apiAuth";
 import useFetch from "@/hooks/useFetch";
 import { isAdminUser } from "@/db/apiAdmin";
+import logo from "@/assets/logo.jpg";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -58,7 +59,9 @@ const Navbar = () => {
     <nav className={`sticky top-0 w-full z-50 backdrop-blur-md transition-all duration-300 bg-white/85 dark:bg-neutral-900/85 border-b border-neutral-200/50 dark:border-neutral-700/50 ${scrolled ? "shadow-lg" : "shadow-sm"}`}>
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         <Link to="/" className="flex items-center gap-2 text-2xl font-bold bg-gradient-to-r from-yellow-500 to-yellow-600 bg-clip-text text-transparent">
-          <Home className="w-6 h-6" /> PrepMate
+          <Home className="w-6 h-6" />
+          <img src={logo} alt="PrepMate Logo" className="h-8 w-8 rounded-full" /> 
+  PrepMate
         </Link>
 
         {/* Desktop Links */}

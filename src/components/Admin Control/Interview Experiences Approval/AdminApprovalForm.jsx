@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Linkedin, Github, Briefcase, FileText } from "lucide-react";
 import {
@@ -10,7 +10,7 @@ import MarkdownEditor from "@/components/submit-experience-form/MarkdownEditor";
 export default function AdminApprovalForm({
   initialData,
   onClose,
-  function: fetchData,
+  fetchData,
 }) {
   const [formData, setFormData] = useState({
     role: initialData.role || "",
@@ -20,8 +20,18 @@ export default function AdminApprovalForm({
     github_url: initialData.github_url || "",
     content: initialData.content || "",
   });
-
   const [loading, setLoading] = useState(false);
+
+  const offerTypes = [
+    { value: "internship", label: "Internship" },
+    { value: "full_time", label: "Full Time" },
+    { value: "internship_ppo", label: "Internship + PPO" },
+  ];
+
+  const opportunityTypes = [
+    { value: "on", label: "On Campus" },
+    { value: "off", label: "Off Campus" },
+  ];
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -38,8 +48,8 @@ export default function AdminApprovalForm({
     try {
       setLoading(true);
       await approveExperience(initialData.id, formData);
-      onClose();
       fetchData();
+      onClose();
     } catch (err) {
       console.error("Error approving:", err);
     } finally {
@@ -51,8 +61,8 @@ export default function AdminApprovalForm({
     try {
       setLoading(true);
       await deleteExperience(initialData.id);
-      onClose();
       fetchData();
+      onClose();
     } catch (err) {
       console.error("Error deleting:", err);
     } finally {
@@ -80,14 +90,53 @@ export default function AdminApprovalForm({
         </div>
       </div>
 
-      {/* LinkedIn */}
+      {/* Offer Type */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+          <FileText className="w-4 h-4 text-green-500" /> Offer Type
+        </label>
+        <select
+          name="offer_type"
+          value={formData.offer_type}
+          onChange={handleChange}
+          className="w-full bg-gray-800 text-white p-2 rounded-lg outline-none"
+        >
+          <option value="">Select Offer Type</option>
+          {offerTypes.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Opportunity Type */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+          <FileText className="w-4 h-4 text-purple-500" /> Opportunity Type
+        </label>
+        <select
+          name="opportunity_type"
+          value={formData.opportunity_type}
+          onChange={handleChange}
+          className="w-full bg-gray-800 text-white p-2 rounded-lg outline-none"
+        >
+          <option value="">Select Opportunity Type</option>
+          {opportunityTypes.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* LinkedIn & GitHub */}
       <div className="grid grid-cols-2 space-x-6">
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
             <Linkedin className="w-4 h-4 text-blue-500" /> LinkedIn URL
           </label>
           <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-2">
-    
             <input
               type="url"
               name="linkedin_url"
@@ -99,13 +148,11 @@ export default function AdminApprovalForm({
           </div>
         </div>
 
-        {/* GitHub */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
             <Github className="w-4 h-4 text-gray-400" /> GitHub URL
           </label>
           <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-2">
-        
             <input
               type="url"
               name="github_url"
@@ -121,8 +168,8 @@ export default function AdminApprovalForm({
       {/* Markdown Editor */}
       <div className="space-y-2">
         <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-            
-          </label>
+          Experience Content
+        </label>
         <MarkdownEditor
           value={formData.content}
           onChange={handleExperienceChange}

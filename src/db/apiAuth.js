@@ -68,7 +68,7 @@ export async function signout() {
 }
 
 export async function getUserById(id) {
-  const { data, error } = await supabase
+  const {data, error} = await supabase
     .from("usersProfile")
     .select("name")
     .eq("id", id)

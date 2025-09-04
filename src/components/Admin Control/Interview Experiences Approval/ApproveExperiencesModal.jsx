@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Building2, User } from "lucide-react";
 import AdminApprovalForm from "./AdminApprovalForm";
 
-export default function ApprovalModal({ open, onClose, experience, function: fetchData}) {
+export default function ApprovalModal({ open, onClose, experience, fetchData}) {
   if (!experience) return null;
 
   return (
@@ -45,7 +45,7 @@ export default function ApprovalModal({ open, onClose, experience, function: fet
           <AdminApprovalForm
             initialData={experience}
             onClose={onClose}
-            function={fetchData}
+            fetchData={fetchData}
           />
         </div>
       </DialogContent>

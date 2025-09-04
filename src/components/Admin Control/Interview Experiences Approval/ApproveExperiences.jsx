@@ -148,7 +148,7 @@
             open={!!selectedExp}
             onClose={() => setSelectedExp(null)}
             experience={selectedExp}
-            function = {fetchData}
+            refreshData = {fetchData}
           />
         </div>
       );
