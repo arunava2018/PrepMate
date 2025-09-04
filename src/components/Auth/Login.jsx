@@ -70,14 +70,6 @@ export default function Login() {
       setLoading(false);
     }
   };
-
-  // Disable submit if loading or validation errors or empty fields
-  const isSubmitDisabled =
-    loading ||
-    !formData.email ||
-    !formData.password ||
-    Object.keys(errors).length > 0;
-
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {successAlert && (
@@ -136,7 +128,6 @@ export default function Login() {
       {/* Submit */}
       <Button
         type="submit"
-        disabled={isSubmitDisabled}
         className="w-full bg-yellow-600 hover:bg-yellow-700 text-white"
       >
         {loading ? <BeatLoader size={10} color="#fff" /> : "Login"}
