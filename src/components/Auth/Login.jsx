@@ -4,10 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BeatLoader } from "react-spinners";
 import { Eye, EyeOff } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import * as Yup from "yup";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { login } from "@/db/apiAuth";
 import { UrlState } from "@/context";
 
 // ✅ Login validation schema
@@ -20,8 +19,12 @@ const loginSchema = Yup.object().shape({
 
 export default function Login() {
   const navigate = useNavigate();
-  const { fetchUser } = UrlState();
+  const location = useLocation();
+  const { login } = UrlState(); // ✅ login comes from context now
   const emailInputRef = useRef(null);
+
+  // either go back to intended page, or default to dashboard
+  const from = location.state?.from?.pathname || "/dashboard";
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
@@ -30,7 +33,6 @@ export default function Login() {
   const [successAlert, setSuccessAlert] = useState(false);
 
   useEffect(() => {
-    // Autofocus email input on mount
     emailInputRef.current?.focus();
   }, []);
 
@@ -47,17 +49,13 @@ export default function Login() {
       setLoading(true);
       await loginSchema.validate(formData, { abortEarly: false });
 
-      // Call login API
+      // 🔑 Call login from context
       await login(formData);
 
-      // Refresh user in context
-      await fetchUser();
-
-      // Show success alert
       setSuccessAlert(true);
 
       // Redirect after 2s
-      setTimeout(() => navigate("/dashboard"), 2000);
+      setTimeout(() => navigate(from, { replace: true }), 2000);
     } catch (err) {
       if (err.inner) {
         const newErrors = {};
@@ -70,12 +68,15 @@ export default function Login() {
       setLoading(false);
     }
   };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {successAlert && (
         <Alert variant="success" className="mb-4">
           <AlertTitle>Login Successful!</AlertTitle>
-          <AlertDescription>Redirecting to dashboard...</AlertDescription>
+          <AlertDescription>
+            Redirecting...
+          </AlertDescription>
         </Alert>
       )}
 
@@ -136,7 +137,7 @@ export default function Login() {
       <p className="mx-auto">
         Don't have an account?{" "}
         <span
-          onClick={() => navigate("/auth/signup")}
+          onClick={() => navigate("/auth/signup", { state: { from: location.state?.from } })  }
           className="text-yellow-400 underline cursor-pointer"
         >
           Register

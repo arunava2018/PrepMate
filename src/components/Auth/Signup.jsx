@@ -11,13 +11,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BeatLoader } from "react-spinners";
 import { Eye, EyeOff } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import * as Yup from "yup";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { signup } from "@/db/apiAuth";
 import { UrlState } from "@/context";
 
-// ✅ Validation Schema including confirmPassword
+// ✅ Validation Schema
 const signupSchema = Yup.object().shape({
   name: Yup.string().required("Full name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -37,7 +36,12 @@ const signupSchema = Yup.object().shape({
 
 function Signup() {
   const navigate = useNavigate();
-  const { fetchUser } = UrlState();
+  const location = useLocation();
+  const { signup } = UrlState();   // ✅ use signup from context
+
+  // redirect to the page user originally wanted, or dashboard
+  const from = location.state?.from?.pathname || "/dashboard";
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -66,18 +70,14 @@ function Signup() {
       setLoading(true);
       await signupSchema.validate(formData, { abortEarly: false });
 
-      // 1️⃣ Call signup API with formData excluding confirmPassword
+      // ✅ remove confirmPassword before sending
       const { confirmPassword, ...signupData } = formData;
-      await signup(signupData);
+      await signup(signupData);   // use context signup
 
-      // 2️⃣ Refresh user in context
-      await fetchUser();
-
-      // 3️⃣ Show success alert
       setSuccessAlert(true);
 
-      // 4️⃣ Automatically navigate to dashboard after 2s
-      setTimeout(() => navigate("/dashboard"), 2000);
+      // ✅ redirect automatically
+      setTimeout(() => navigate(from, { replace: true }), 2000);
     } catch (err) {
       if (err?.inner) {
         const newErrors = {};
@@ -102,7 +102,7 @@ function Signup() {
         <Alert variant="success" className="mb-4">
           <AlertTitle>Signup Successful!</AlertTitle>
           <AlertDescription>
-            Your account has been created. Redirecting to dashboard...
+            Redirecting...
           </AlertDescription>
         </Alert>
       )}
@@ -178,7 +178,6 @@ function Signup() {
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
-              aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
@@ -200,9 +199,6 @@ function Signup() {
               type="button"
               onClick={() => setShowConfirmPassword((prev) => !prev)}
               className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
-              aria-label={
-                showConfirmPassword ? "Hide confirm password" : "Show confirm password"
-              }
             >
               {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
@@ -217,7 +213,11 @@ function Signup() {
         )}
 
         <CardFooter>
-          <Button type="submit" disabled={loading} className="w-full space-y-1 mt-2 bg-yellow-600">
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full mt-2 bg-yellow-600"
+          >
             {loading ? <BeatLoader size={10} color="#fff" /> : "Signup"}
           </Button>
         </CardFooter>
