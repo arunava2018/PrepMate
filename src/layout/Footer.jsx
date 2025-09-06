@@ -65,7 +65,7 @@ export default function Footer() {
             Connect
           </h3>
           <div className="mt-4 flex justify-center md:justify-start space-x-5">
-            <a href="#" className="hover:text-yellow-500 transition-colors">
+            <a href="https://x.com/Arunava17818355" className="hover:text-yellow-500 transition-colors">
               <Twitter size={22} />
             </a>
             <a href="https://github.com/arunava2018" className="hover:text-yellow-500 transition-colors">
@@ -85,7 +85,7 @@ export default function Footer() {
       <div className="border-t border-neutral-200 dark:border-gray-800 py-5 text-center text-sm text-neutral-600 dark:text-gray-500 transition-colors">
         <p>
           Made with <span className="text-yellow-500">⚡</span> by{" "}
-          <span className="font-medium text-neutral-800 dark:text-gray-300">PrepMate</span> • ©{" "}
+          <span className="font-medium text-neutral-800 dark:text-gray-300">Arunava Banerjee</span> • ©{" "}
           {new Date().getFullYear()} All rights reserved.
         </p>
       </div>
