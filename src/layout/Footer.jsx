@@ -84,8 +84,13 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-neutral-200 dark:border-gray-800 py-5 text-center text-sm text-neutral-600 dark:text-gray-500 transition-colors">
         <p>
+<<<<<<< HEAD
           Made with <span className="text-yellow-500">❤️</span> by{" "}
           <span className="font-medium text-neutral-800 dark:text-gray-300">Arunava</span> • ©{" "}
+=======
+          Made with <span className="text-yellow-500">⚡</span> by{" "}
+          <span className="font-medium text-neutral-800 dark:text-gray-300">Arunava Banerjee</span> • ©{" "}
+>>>>>>> 9dae21f5c8759f1bcc1bb4e48d9e2b65cf8ed6ea
           {new Date().getFullYear()} All rights reserved.
         </p>
       </div>
