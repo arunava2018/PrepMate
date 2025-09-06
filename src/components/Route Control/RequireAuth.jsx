@@ -4,16 +4,29 @@ import { UrlState } from "@/context";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 export default function RequireAuth({ children }) {
-  const { isAuthenticated } = UrlState();  // ✅ get it directly from context
+  const { isAuthenticated, loading } = UrlState();
   const [redirect, setRedirect] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!loading && !isAuthenticated) {
       const timer = setTimeout(() => setRedirect(true), 200);
       return () => clearTimeout(timer);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, loading]);
+
+  if (loading) {
+    return (
+      <div className="p-4">
+        <Alert>
+          <AlertTitle>Checking authentication...</AlertTitle>
+          <AlertDescription>
+            Please wait while we verify your session.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     if (redirect) {
