@@ -23,6 +23,7 @@ const Navbar = () => {
 
   useEffect(() => {
     if (isAuthenticated) isAdminUser(user.id).then(setIsAdmin);
+    else setIsAdmin(false);
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
