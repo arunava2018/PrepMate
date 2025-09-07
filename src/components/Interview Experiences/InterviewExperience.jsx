@@ -3,7 +3,7 @@ import useFetch from "@/hooks/useFetch";
 import React, { useEffect, useState } from "react";
 import Loader from "../Loader";
 import { Card, CardContent } from "../ui/card";
-import { FileText, Building2 } from "lucide-react";
+import { FileText } from "lucide-react";
 import CompanyExperienceSection from "./CompanyExperienceSection";
 import ExperienceStats from "./ExperienceStats";
 
@@ -16,8 +16,16 @@ function InterviewExperience() {
       if (Array.isArray(fetchedData)) {
         const grouped = fetchedData.reduce((acc, exp) => {
           if (exp.company_name) {
-            if (!acc[exp.company_name]) acc[exp.company_name] = [];
-            acc[exp.company_name].push(exp);
+            const normalizedName = exp.company_name.trim().toLowerCase();
+
+            if (!acc[normalizedName]) {
+              acc[normalizedName] = {
+                displayName: exp.company_name.trim(), // store clean original for display
+                experiences: [],
+              };
+            }
+
+            acc[normalizedName].experiences.push(exp);
           }
           return acc;
         }, {});
@@ -41,7 +49,9 @@ function InterviewExperience() {
   }
 
   const totalCompanies = Object.keys(groupedExperiences).length;
-  const totalExperiences = Object.values(groupedExperiences).flat().length;
+  const totalExperiences = Object.values(groupedExperiences)
+    .map((g) => g.experiences.length)
+    .reduce((a, b) => a + b, 0);
 
   return (
     <div className="space-y-6">
@@ -55,8 +65,8 @@ function InterviewExperience() {
             Interview Experiences
           </h1>
         </div>
-        
-        <ExperienceStats 
+
+        <ExperienceStats
           totalCompanies={totalCompanies}
           totalExperiences={totalExperiences}
         />
@@ -66,11 +76,11 @@ function InterviewExperience() {
       {Object.keys(groupedExperiences).length > 0 ? (
         <div className="space-y-4">
           {Object.entries(groupedExperiences)
-            .sort(([, a], [, b]) => b.length - a.length) // Sort by experience count
-            .map(([company, experiences]) => (
+            .sort(([a], [b]) => a.localeCompare(b)) // sort lexicographically
+            .map(([normalizedName, { displayName, experiences }]) => (
               <CompanyExperienceSection
-                key={company}
-                company={company}
+                key={normalizedName}
+                company={displayName}
                 experiences={experiences}
               />
             ))}

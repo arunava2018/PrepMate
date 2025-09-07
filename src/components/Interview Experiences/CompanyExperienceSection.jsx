@@ -8,6 +8,7 @@ import {
 import { Badge } from "../ui/badge";
 import { Building2 } from "lucide-react";
 import ExperienceCard from "./ExperienceCard";
+
 function CompanyExperienceSection({ company, experiences }) {
   return (
     <Accordion type="multiple" className="w-full">
@@ -25,7 +26,7 @@ function CompanyExperienceSection({ company, experiences }) {
                 {company}
               </h2>
               <Badge className="mt-1 bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200 text-sm">
-                {experiences.length} experience{experiences.length > 1 ? 's' : ''}
+                {experiences.length} experience{experiences.length > 1 ? "s" : ""}
               </Badge>
             </div>
           </div>
@@ -37,11 +38,10 @@ function CompanyExperienceSection({ company, experiences }) {
             {/* Nested Accordion for Individual Experiences */}
             <Accordion type="multiple" className="space-y-3">
               {experiences.map((exp, index) => (
-                <ExperienceCard
-                  key={exp.id} 
-                  experience={exp} 
-                  index={index}
-                />
+                <div key={exp.id} className="flex items-center justify-between">
+                  {/* Candidate + ExperienceCard */}
+                  <ExperienceCard experience={exp} index={index} />
+                </div>
               ))}
             </Accordion>
           </div>
